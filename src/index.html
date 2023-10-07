@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="topbar.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+    />
+    <title>Inicio</title>
+  </head>
+  <body>
+    <div class="top-bar">
+      <span class="left-button">
+        <button class="close-button" id="stop-code">
+          <i class="fas fa-x"></i>
+        </button>
+      </span>
+      <span class="language-span"
+        ><i class="fas fa-language"></i>
+        <select class="language-selector" id="language-selector"></select>
+      </span>
+      <span class="theme-span"
+        ><i class="fas fa-sun"></i>
+        <label class="switch">
+          <input type="checkbox" id="switch-theme" />
+          <span class="slider round"></span>
+        </label>
+        <i class="fas fa-moon"></i>
+      </span>
+    </div>
+    <span id="test"></span>
+    <div class="container" id="button-container">
+      <div class="column">
+        <h1 class="title" id="crono-title"></h1>
+        <div class="button-container" id="button-container-crono">
+          <button class="add-button" id="add-crono">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="column">
+        <h1 class="title" id="cdown-title"></h1>
+        <div class="button-container" id="button-container-cdown">
+          <button class="add-button" id="add-cdown">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="column">
+        <h1 class="title" id="cdowntime-title"></h1>
+        <div class="button-container" id="button-container-cdowntime">
+          <button class="add-button" id="add-cdowntime">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="column">
+        <h1 class="title" id="twitchext-title"></h1>
+        <div class="button-container" id="button-container-twitchext">
+          <span class="add-button">COMING SOON...</span>
+        </div>
+        <h1 class="title" id="time-title"></h1>
+        <div class="button-container" id="button-container-time">
+          <button class="add-button" id="add-time">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="client.js"></script>
+  </body>
+</html>

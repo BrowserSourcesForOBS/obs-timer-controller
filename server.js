@@ -1,0 +1,400 @@
+const express = require('express')
+const http = require('http')
+const WebSocket = require('ws')
+const path = require('path')
+const fs = require('fs-extra')
+const open = require('openurl')
+
+// Obtén la ubicación del directorio donde se encuentra el ejecutable
+const executablePath = path.dirname(process.execPath)
+
+// Cambia el directorio de trabajo actual a la ubicación del ejecutable
+process.chdir(executablePath)
+
+const {
+  loadDataFromYAML,
+  saveVariablesToYAML,
+  createDataYAML,
+  startTimer,
+  pauseCrono,
+  pauseCdown,
+  resetCrono,
+  resetCdown,
+  stopCdown,
+  sendVariableData,
+  initConfig,
+  saveConfig,
+  editTimeTimer,
+  editTimeCdowntime,
+  getFonts
+} = require('./functions')
+
+const app = express()
+const server = http.createServer(app)
+const wss = new WebSocket.Server({ server })
+
+// Variable to store the list of system fonts
+const fontOptions = getFonts()
+
+// Load variables from the YAML file at server startup
+let GlobalVariables
+GlobalVariables = loadDataFromYAML('./resources/app/src/db.yaml')
+try {
+  Object.keys(GlobalVariables).forEach((key) => {
+    if (GlobalVariables[key].status === 'started') {
+      GlobalVariables[key].status = 'paused'
+    }
+  })
+  saveVariablesToYAML(GlobalVariables)
+} catch (error) {
+  GlobalVariables = {}
+}
+
+let Config;
+(async () => {
+  Config = await initConfig()
+  saveConfig(Config)
+})()
+
+// WebSocket connections handling
+wss.on('connection', (ws) => {
+  // Send the list of fonts to the client upon connection
+  ws.send(JSON.stringify({ fonts: fontOptions }))
+
+  ws.on('message', (message) => {
+    const data = JSON.parse(message)
+
+    if (data.action === 'reloadPage') {
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({ action: 'reload' }))
+        }
+      })
+    } else if (data.action === 'themeChange') {
+      Config.themedark = data.themedark
+      saveConfig(Config)
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({ action: 'reload' }))
+        }
+      })
+    } else if (data.action === 'langChange') {
+      Config.lang = data.lang
+      saveConfig(Config)
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({ action: 'reload' }))
+        }
+      })
+    } else if (data.action === 'startCrono' || data.action === 'startCdown') {
+      // Start the timer when receiving the "start" action
+      startTimer(wss, GlobalVariables, data.classElement)
+    } else if (data.action === 'pauseCrono') {
+      // Pause the timer when receiving the "pause" action
+      pauseCrono(wss, GlobalVariables, data.classElement)
+    } else if (data.action === 'pauseCdown') {
+      // Pause the countdown when receiving the "pause" action
+      pauseCdown(wss, GlobalVariables, data.classElement)
+    } else if (data.action === 'resetCrono') {
+      // Reset the timer when receiving the "reset" action
+      resetCrono(wss, GlobalVariables, data.classElement)
+    } else if (data.action === 'resetCdown') {
+      // Reset the countdown when receiving the "reset" action
+      resetCdown(wss, GlobalVariables, data.classElement)
+    } else if (data.action === 'stopCdown') {
+      // Stop the countdown when receiving the "stop" action
+      stopCdown(wss, GlobalVariables, data.classElement)
+    } else if (data.action === 'changeTimeCdown' && data.time) {
+      // Change the time format when receiving the "changeFormat" action
+      GlobalVariables[data.classElement].textMilliseconds = data.time
+      // Transmit the updated format to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(GlobalVariables))
+        }
+      })
+      saveVariablesToYAML(GlobalVariables)
+      if (GlobalVariables[data.classElement].status === 'stopped') {
+        resetCdown(wss, GlobalVariables, data.classElement)
+      }
+    } else if (data.action === 'changeTimeCdownTime' && data.time) {
+      // Change the end time format when receiving the "changeFormat" action
+      GlobalVariables[data.classElement].endDatetime = data.time
+      // Transmit the updated format to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(GlobalVariables))
+        }
+      })
+      saveVariablesToYAML(GlobalVariables)
+    } else if (
+      data.action === 'changeTimezoneCdownTime' ||
+      data.action === 'changeTimezoneTime'
+    ) {
+      // Change the time format when receiving the "changeFormat" action
+      GlobalVariables[data.classElement].timezone = data.timezone
+      // Transmit the updated format to all WebSocket clients
+      saveVariablesToYAML(GlobalVariables)
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({ action: 'reload' }))
+        }
+      })
+    } else if (data.action === 'editMsgCdown' || data.action === 'editMsgCdownTime') {
+      GlobalVariables[data.classElement].msgEnd = data.msg
+      // Transmit the updated format to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(GlobalVariables))
+        }
+      })
+      saveVariablesToYAML(GlobalVariables)
+    } else if (
+      (data.action === 'changeFormatCrono' ||
+        data.action === 'changeFormatCdown' ||
+        data.action === 'changeFormatCdownTime' ||
+        data.action === 'changeFormatTime') &&
+      data.format
+    ) {
+      const classElement = data.classElement
+      GlobalVariables[classElement].formatTime = data.format
+
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(GlobalVariables))
+        }
+      })
+
+      saveVariablesToYAML(GlobalVariables)
+    } else if (
+      data.action === 'editTimeCrono' ||
+    data.action === 'editTimeCdown'
+    ) {
+      editTimeTimer(wss, GlobalVariables, data.time, data.classElement)
+    } else if (data.action === 'editTimeCdownTime') {
+      editTimeCdowntime(wss, GlobalVariables, data.time, data.classElement)
+    } else if (
+      (data.action === 'changeFontCrono' ||
+        data.action === 'changeFontCdown' ||
+        data.action === 'changeFontCdownTime' ||
+        data.action === 'changeFontTime') &&
+      data.font
+    ) {
+      // Change the font format when receiving the "changeFormatTimer"
+      GlobalVariables[data.classElement].font = data.font
+
+      // Transmit the updated format to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(GlobalVariables))
+        }
+      })
+      saveVariablesToYAML(GlobalVariables)
+    } else if (
+      (data.action === 'changeSizeCrono' ||
+        data.action === 'changeSizeCdown' ||
+        data.action === 'changeSizeCdownTime' ||
+        data.action === 'changeSizeTime') &&
+      data.size
+    ) {
+      // Change the font size when receiving the "changeFormat"
+      GlobalVariables[data.classElement].size = data.size
+
+      // Transmit the updated format to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(GlobalVariables))
+        }
+      })
+      saveVariablesToYAML(GlobalVariables)
+    } else if (
+      data.action === 'textFormatCrono' ||
+      data.action === 'textFormatCdown' ||
+      data.action === 'textFormatCdownTime' ||
+      data.action === 'textFormatTime'
+    ) {
+      // Change the text format when receiving the "changeFormat"
+      switch (data.format) {
+        case 'bold':
+          GlobalVariables[data.classElement].bold = !GlobalVariables[data.classElement].bold
+          break
+        case 'italic':
+          GlobalVariables[data.classElement].italic = !GlobalVariables[data.classElement].italic
+          break
+        case 'underline':
+          GlobalVariables[data.classElement].underline = !GlobalVariables[data.classElement].underline
+          break
+      }
+      // Transmit the updated format to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(GlobalVariables))
+        }
+      })
+      saveVariablesToYAML(GlobalVariables)
+    } else if (
+      data.action === 'alignCrono' ||
+      data.action === 'alignCdown' ||
+      data.action === 'alignCdownTime' ||
+      data.action === 'alignTime'
+    ) {
+      // Change the text alignment when receiving the "changeFormat"
+      GlobalVariables[data.classElement].align = data.align
+
+      // Transmit the updated alignment to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(GlobalVariables))
+        }
+      })
+      saveVariablesToYAML(GlobalVariables)
+    } else if (
+      data.action === 'changeColorCrono' ||
+      data.action === 'changeColorCdown' ||
+      data.action === 'changeColorCdownTime' ||
+      data.action === 'changeColorTime'
+    ) {
+      // Change the text color when receiving the "changeFormat"
+      GlobalVariables[data.classElement].colorText = data.color
+
+      // Transmit the updated color to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(GlobalVariables))
+        }
+      })
+      saveVariablesToYAML(GlobalVariables)
+    } else if (data.action === 'getVariables' && data.classElement) {
+      GlobalVariables = loadDataFromYAML('./resources/app/src/db.yaml')
+      // The client requests variable data
+      sendVariableData(ws, GlobalVariables, Config, data.classElement)
+    } else if (data.action === 'createData' && data.classType) {
+      const page = createDataYAML(GlobalVariables, data.classType)
+      fs.copy(`./resources/app/src/template/${data.classType}`, `./resources/app/src/${page}`)
+        .then(() => {
+          console.log('Folder copied successfully.')
+        })
+        .catch((err) => {
+          console.error('Error copying the folder:', err)
+        })
+    } else if (data.action === 'removeData' && data.remove) {
+      delete GlobalVariables[data.remove]
+      fs.remove(`./resources/app/src/${data.remove}`)
+        .then(() => {
+          // console.log(`Folder deleted successfully: ${folderToDelete}`);
+        })
+        .catch((error) => {
+          console.error(`Error deleting the folder: ${error}`)
+        })
+      saveVariablesToYAML(GlobalVariables)
+    } else if (data.action === 'stop-code') {
+      // Stop the Node.js server
+      process.exit()
+    }
+  })
+  ws.send(JSON.stringify(GlobalVariables))
+})
+
+// Configure static routes for HTML files
+app.use(express.static(path.join(__dirname, 'src')))
+
+// Configure route for timer/view
+app.get('/:classElement/view', (req, res) => {
+  const classElement = req.params.classElement
+  res.sendFile(path.join(__dirname, `src/${classElement}/view/index.html`))
+})
+
+// Configure route for timer/control
+app.get('/:classElement/control', (req, res) => {
+  const classElement = req.params.classElement
+  res.sendFile(path.join(__dirname, `src/${classElement}/control/index.html`))
+})
+
+app.get('/:classElement/control&:request', (req, res) => {
+  const classElement = req.params.classElement
+  const request = req.params.request
+
+  // Here you can check the value of 'request' and perform the corresponding action
+  if (request === 'start' && !classElement.startsWith('cdowntime') && !classElement.startsWith('time')) {
+    // Simulate pressing the "Start" button by sending a WebSocket message
+    startTimer(wss, GlobalVariables)
+  } else if (request === 'pause' && classElement.startsWith('crono')) {
+    // Simulate pressing the "Pause" button by sending a WebSocket message
+    pauseCrono(wss, GlobalVariables, classElement)
+  } else if (request === 'pause' && classElement.startsWith('cdown') && !classElement.startsWith('cdowntime')) {
+    // Simulate pressing the "Pause" button by sending a WebSocket message
+    pauseCdown(wss, GlobalVariables, classElement)
+  } else if (request === 'startpause' && classElement.startsWith('crono')) {
+    const status = GlobalVariables[classElement].status
+    if (status === 'started') {
+      pauseCrono(wss, GlobalVariables, classElement)
+    } else if (status === 'paused' || status === 'stopped') {
+      startTimer(wss, GlobalVariables, classElement)
+    }
+  } else if (request === 'startpause' && classElement.startsWith('cdown') && !classElement.startsWith('cdowntime')) {
+    const status = GlobalVariables[classElement].status
+    if (status === 'started') {
+      pauseCdown(wss, GlobalVariables, classElement)
+    } else if (status === 'paused' || status === 'stopped') {
+      startTimer(wss, GlobalVariables, classElement)
+    }
+  } else if (request === 'reset' && classElement.startsWith('crono')) {
+    // Simulate pressing the "Reset" button by sending a WebSocket message
+    resetCrono(wss, GlobalVariables, classElement)
+  } else if (request === 'reset' && classElement.startsWith('cdown') && !classElement.startsWith('cdowntime')) {
+    // Simulate pressing the "Reset" button by sending a WebSocket message
+    resetCdown(wss, GlobalVariables, classElement)
+  } else if (
+    !classElement.startsWith('time') &&
+    request.split('=')[0] === 'addtime'
+  ) {
+    if (classElement.startsWith('cdowntime')) {
+      editTimeCdowntime(
+        wss,
+        GlobalVariables,
+        `+${request.split('=')[1]}`,
+        classElement
+      )
+    } else {
+      editTimeTimer(
+        wss,
+        GlobalVariables,
+      `+${request.split('=')[1]}`,
+      classElement
+      )
+    }
+  } else if (
+    !classElement.startsWith('time') &&
+    request.split('=')[0] === 'subtime'
+  ) {
+    if (classElement.startsWith('cdowntime')) {
+      editTimeCdowntime(
+        wss,
+        GlobalVariables,
+        `-${request.split('=')[1]}`,
+        classElement
+      )
+    } else {
+      editTimeTimer(
+        wss,
+        GlobalVariables,
+      `-${request.split('=')[1]}`,
+      classElement
+      )
+    }
+  }
+
+  // Redirect back to the control page
+  res.sendFile(path.join(__dirname, `app/${classElement}/control/blank.html`))
+})
+
+// Other server configuration (port, etc.)
+
+// Start the server on port 3000
+const PORT = process.env.PORT || 3000
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`)
+
+  // Open the default browser at 'http://localhost:3000' after starting the server using 'open'.
+  open.open(`http://localhost:${PORT}`)
+})

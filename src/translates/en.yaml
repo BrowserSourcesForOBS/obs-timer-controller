@@ -1,0 +1,12 @@
+home:
+  cronoTitle: TIMERS
+  cdownTitle: COUNTDOWNS
+  cdowntimeTitle: TIME UNTIL...
+  twitchextTitle: TWITCH EXTENSIBLE
+  timeTitle: CURRENT TIME
+  notycopycrono: URL copied to clipboard
+crono:
+  buttons:
+    start: Start
+    pause: Pause
+    reset: Reset

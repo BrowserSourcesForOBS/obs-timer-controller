@@ -1,0 +1,12 @@
+crono01:
+  status: stopped
+  startTime: 0
+  milliseconds: 0
+  formatTime: MM:ss
+  font: Arial
+  size: 50
+  bold: false
+  italic: false
+  underline: false
+  align: center
+  colorText: '#000000'
