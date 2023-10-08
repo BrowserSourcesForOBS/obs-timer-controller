@@ -35,6 +35,7 @@ socket.addEventListener('message', (event) => {
 
     // Configuration and translation
     switchTheme.checked = message.config.themedark
+    buttonClose.title = translateElements.home.close
     if (message.config.themedark) {
       document.body.classList.remove('light-theme')
       document.body.classList.add('dark-theme')
@@ -50,8 +51,12 @@ socket.addEventListener('message', (event) => {
       option.textContent = message.formats.langs[format]
       languageSelector.appendChild(option)
     })
-    languageSelector.value = message.config.lang
-    document.documentElement.lang = message.config.lang
+    languageSelector.value = Object.keys(message.formats.langs).includes(message.config.lang)
+      ? message.config.lang
+      : 'en'
+    document.documentElement.lang = Object.keys(message.formats.langs).includes(message.config.lang)
+      ? message.config.lang
+      : 'en'
 
     titleCrono.textContent = translateElements.home.cronoTitle
     titleCdown.textContent = translateElements.home.cdownTitle

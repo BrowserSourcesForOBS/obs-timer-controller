@@ -15,6 +15,9 @@ if (argsv[0] !== 'test') {
   process.chdir(executablePath)
 }
 
+// The icons for the web page titles are obtained from:
+// https://www.iconfinder.com/search?q=&designer=kmgdesignid&price=free
+
 const {
   loadDataFromYAML,
   saveVariablesToYAML,
@@ -67,6 +70,8 @@ wss.on('connection', (ws) => {
 
   ws.on('message', (message) => {
     const data = JSON.parse(message)
+
+    GlobalVariables = loadDataFromYAML((argsv[0] === 'test') ? './core/db.yaml' : './resources/app/core/db.yaml')
 
     if (data.action === 'reloadPage') {
       wss.clients.forEach((client) => {
@@ -317,6 +322,7 @@ app.get('/:classElement/control', (req, res) => {
 app.get('/:classElement/control&:request', (req, res) => {
   const classElement = req.params.classElement
   const request = req.params.request
+  GlobalVariables = loadDataFromYAML((argsv[0] === 'test') ? './core/db.yaml' : './resources/app/core/db.yaml')
 
   // Here you can check the value of 'request' and perform the corresponding action
   if (request === 'start' && !classElement.startsWith('cdowntime') && !classElement.startsWith('time')) {

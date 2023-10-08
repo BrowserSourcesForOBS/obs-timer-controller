@@ -27,7 +27,9 @@ socket.addEventListener('message', (event) => {
   }
 
   if (message.action === 'sendVariables' && message.classElement === classElement && message.config) {
-    document.documentElement.lang = message.config.lang
+    document.documentElement.lang = Object.keys(message.formats.langs).includes(message.config.lang)
+      ? message.config.lang
+      : 'en'
   }
 
   if (message[classElement].milliseconds !== undefined) {

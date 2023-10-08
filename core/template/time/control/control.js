@@ -71,8 +71,12 @@ socket.addEventListener('message', (event) => {
         option.textContent = message.formats.langs[format]
         langSelector.appendChild(option)
       })
-      langSelector.value = message.config.lang
-      document.documentElement.lang = message.config.lang
+      langSelector.value = Object.keys(message.formats.langs).includes(message.config.lang)
+        ? message.config.lang
+        : 'en'
+      document.documentElement.lang = Object.keys(message.formats.langs).includes(message.config.lang)
+        ? message.config.lang
+        : 'en'
 
       if (elementVariables && typeof elementVariables === 'object') {
         checkHexColor = elementVariables.colorText
