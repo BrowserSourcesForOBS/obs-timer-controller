@@ -1,9 +1,9 @@
 home:
   close: Close the window and stop the code
-  cronoTitle: TIMERS
-  cdownTitle: COUNTDOWNS
+  cronoTitle: CLOCKS
+  cdownTitle: TIMERS
   cdowntimeTitle: TIME UNTIL...
-  twitchextTitle: TWITCH EXTENSIBLE
+  twitchextTitle: EXTENSIBLE TWITCH
   timeTitle: CURRENT TIME
   notycopycrono: URL copied to clipboard
 crono:
