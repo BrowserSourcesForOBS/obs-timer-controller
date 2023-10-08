@@ -38,7 +38,7 @@ const fontOptions = getFonts()
 
 // Load variables from the YAML file at server startup
 let GlobalVariables
-GlobalVariables = loadDataFromYAML('./resources/app/src/db.yaml')
+GlobalVariables = loadDataFromYAML('./resources/app/core/db.yaml')
 try {
   Object.keys(GlobalVariables).forEach((key) => {
     if (GlobalVariables[key].status === 'started') {
@@ -265,12 +265,12 @@ wss.on('connection', (ws) => {
       })
       saveVariablesToYAML(GlobalVariables)
     } else if (data.action === 'getVariables' && data.classElement) {
-      GlobalVariables = loadDataFromYAML('./resources/app/src/db.yaml')
+      GlobalVariables = loadDataFromYAML('./resources/app/core/db.yaml')
       // The client requests variable data
       sendVariableData(ws, GlobalVariables, Config, data.classElement)
     } else if (data.action === 'createData' && data.classType) {
       const page = createDataYAML(GlobalVariables, data.classType)
-      fs.copy(`./resources/app/src/template/${data.classType}`, `./resources/app/src/${page}`)
+      fs.copy(`./resources/app/core/template/${data.classType}`, `./resources/app/core/${page}`)
         .then(() => {
           console.log('Folder copied successfully.')
         })
@@ -279,7 +279,7 @@ wss.on('connection', (ws) => {
         })
     } else if (data.action === 'removeData' && data.remove) {
       delete GlobalVariables[data.remove]
-      fs.remove(`./resources/app/src/${data.remove}`)
+      fs.remove(`./resources/app/core/${data.remove}`)
         .then(() => {
           // console.log(`Folder deleted successfully: ${folderToDelete}`);
         })
@@ -301,13 +301,13 @@ app.use(express.static(path.join(__dirname, 'src')))
 // Configure route for timer/view
 app.get('/:classElement/view', (req, res) => {
   const classElement = req.params.classElement
-  res.sendFile(path.join(__dirname, `src/${classElement}/view/index.html`))
+  res.sendFile(path.join(__dirname, `core/${classElement}/view/index.html`))
 })
 
 // Configure route for timer/control
 app.get('/:classElement/control', (req, res) => {
   const classElement = req.params.classElement
-  res.sendFile(path.join(__dirname, `src/${classElement}/control/index.html`))
+  res.sendFile(path.join(__dirname, `core/${classElement}/control/index.html`))
 })
 
 app.get('/:classElement/control&:request', (req, res) => {

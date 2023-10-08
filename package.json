@@ -21,6 +21,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "node": "node . test",
     "pkg": "electron-packager . OBS-Timer-Controller --platform=win32 --arch=x64 --out=dist --overwrite --icon=icon.ico --app-version=1.0.0 --author=\"XtoManuel\" --description=\"Handling browser fonts for OBS related to timers and countdowns.\""
   },
   "author": "XtoManuel",

@@ -104,7 +104,7 @@ exports.loadConfig = async () => {
 
   try {
     // Read the YAML file (if it exists)
-    const yamlFile = fs.readFileSync('./resources/app/src/config.yaml', 'utf8')
+    const yamlFile = fs.readFileSync('./resources/app/core/config.yaml', 'utf8')
 
     // Convert the YAML file content to a JavaScript object
     const data = yaml.load(yamlFile)
@@ -130,7 +130,7 @@ exports.saveConfig = (config) => {
     const configYAML = yaml.dump(config)
 
     // Write the content to the YAML file
-    fs.writeFileSync('./resources/app/src/config.yaml', configYAML, 'utf8')
+    fs.writeFileSync('./resources/app/core/config.yaml', configYAML, 'utf8')
 
     // console.log('Variables saved to YAML file.');
   } catch (error) {
@@ -153,9 +153,11 @@ exports.loadDataFromYAML = (name) => {
       // console.log('Variables loaded from YAML file.');
     } else {
       console.error('The YAML file does not contain valid data.')
+      return {}
     }
   } catch (error) {
     console.error('Error loading variables from YAML file:', error)
+    return {}
   }
 }
 
@@ -166,7 +168,7 @@ exports.saveVariablesToYAML = (GlobalVariables) => {
     const variablesYAML = yaml.dump(GlobalVariables)
 
     // Write the content to the YAML file
-    fs.writeFileSync('./resources/app/src/db.yaml', variablesYAML, 'utf8')
+    fs.writeFileSync('./resources/app/core/db.yaml', variablesYAML, 'utf8')
 
     // console.log('Variables saved to YAML file.');
   } catch (error) {
@@ -260,8 +262,8 @@ exports.createDataYAML = (GlobalVariables, classType) => {
 // Send variable data to a WebSocket client
 exports.sendVariableData = (client, GlobalVariables, configuration, classE) => {
   if (GlobalVariables && typeof GlobalVariables === 'object') {
-    const formats = this.loadDataFromYAML('./resources/app/src/formats.yaml')
-    const translates = this.loadDataFromYAML(`./resources/app/src/translates/${configuration.lang}.yaml`)
+    const formats = this.loadDataFromYAML('./resources/app/core/formats.yaml')
+    const translates = this.loadDataFromYAML(`./resources/app/core/translates/${configuration.lang}.yaml`)
 
     // Send variable data to the client
     if (classE === 'home') {

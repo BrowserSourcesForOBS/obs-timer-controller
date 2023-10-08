@@ -1,2 +1,4 @@
-node_modules/
+core/config.yaml
+core/db.yaml
 dist/
+node_modules/
