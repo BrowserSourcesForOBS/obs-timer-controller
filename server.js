@@ -5,11 +5,15 @@ const path = require('path')
 const fs = require('fs-extra')
 const open = require('openurl')
 
-// Obtén la ubicación del directorio donde se encuentra el ejecutable
-const executablePath = path.dirname(process.execPath)
+const argsv = process.argv.slice(2)
 
-// Cambia el directorio de trabajo actual a la ubicación del ejecutable
-process.chdir(executablePath)
+if (argsv[0] !== 'test') {
+  // Obtén la ubicación del directorio donde se encuentra el ejecutable
+  const executablePath = path.dirname(process.execPath)
+
+  // Cambia el directorio de trabajo actual a la ubicación del ejecutable
+  process.chdir(executablePath)
+}
 
 const {
   loadDataFromYAML,
@@ -38,7 +42,7 @@ const fontOptions = getFonts()
 
 // Load variables from the YAML file at server startup
 let GlobalVariables
-GlobalVariables = loadDataFromYAML('./resources/app/core/db.yaml')
+GlobalVariables = loadDataFromYAML((argsv[0] === 'test') ? './core/db.yaml' : './resources/app/core/db.yaml')
 try {
   Object.keys(GlobalVariables).forEach((key) => {
     if (GlobalVariables[key].status === 'started') {
@@ -265,12 +269,12 @@ wss.on('connection', (ws) => {
       })
       saveVariablesToYAML(GlobalVariables)
     } else if (data.action === 'getVariables' && data.classElement) {
-      GlobalVariables = loadDataFromYAML('./resources/app/core/db.yaml')
+      GlobalVariables = loadDataFromYAML((argsv[0] === 'test') ? './core/db.yaml' : './resources/app/core/db.yaml')
       // The client requests variable data
       sendVariableData(ws, GlobalVariables, Config, data.classElement)
     } else if (data.action === 'createData' && data.classType) {
       const page = createDataYAML(GlobalVariables, data.classType)
-      fs.copy(`./resources/app/core/template/${data.classType}`, `./resources/app/core/${page}`)
+      fs.copy((argsv[0] === 'test') ? `./core/template/${data.classType}` : `./resources/app/core/template/${data.classType}`, (argsv[0] === 'test') ? `./core/${page}` : `./resources/app/core/${page}`)
         .then(() => {
           console.log('Folder copied successfully.')
         })
@@ -279,7 +283,7 @@ wss.on('connection', (ws) => {
         })
     } else if (data.action === 'removeData' && data.remove) {
       delete GlobalVariables[data.remove]
-      fs.remove(`./resources/app/core/${data.remove}`)
+      fs.remove((argsv[0] === 'test') ? `./core/${data.remove}` : `./resources/app/core/${data.remove}`)
         .then(() => {
           // console.log(`Folder deleted successfully: ${folderToDelete}`);
         })
@@ -296,7 +300,7 @@ wss.on('connection', (ws) => {
 })
 
 // Configure static routes for HTML files
-app.use(express.static(path.join(__dirname, 'src')))
+app.use(express.static(path.join(__dirname, 'core')))
 
 // Configure route for timer/view
 app.get('/:classElement/view', (req, res) => {
@@ -385,7 +389,7 @@ app.get('/:classElement/control&:request', (req, res) => {
   }
 
   // Redirect back to the control page
-  res.sendFile(path.join(__dirname, `app/${classElement}/control/blank.html`))
+  res.sendFile(path.join(__dirname, `core/${classElement}/control/blank.html`))
 })
 
 // Other server configuration (port, etc.)

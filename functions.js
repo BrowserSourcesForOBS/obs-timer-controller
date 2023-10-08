@@ -6,6 +6,8 @@ const WebSocket = require('ws')
 const { getMs } = require('util-tiempo')
 const fontkit = require('fontkit')
 
+const argsv = process.argv.slice(2)
+
 // Convert a string containing digits to an integer
 function strToInt (str) {
   const digits = str.replace(/\D/g, '')
@@ -24,7 +26,7 @@ async function getLanguage () {
     const languageValue = (languageValueLine.split(/\s+/).filter((element) => element !== '')[2]).split('-')[0]
     return languageValue
   } else {
-    throw new Error('Could not find language Registry key.')
+    console.error('Could not find language Registry key.')
   }
 }
 
@@ -44,10 +46,10 @@ async function darkThemeCheck () {
     } else if (themeValue === '0') {
       return true // Dark theme
     } else {
-      throw new Error('Could not determine Windows theme.')
+      console.error('Could not determine Windows theme.')
     }
   } else {
-    throw new Error('Could not find theme Registry key.')
+    console.error('Could not find theme Registry key.')
   }
 }
 
@@ -104,7 +106,7 @@ exports.loadConfig = async () => {
 
   try {
     // Read the YAML file (if it exists)
-    const yamlFile = fs.readFileSync('./resources/app/core/config.yaml', 'utf8')
+    const yamlFile = fs.readFileSync((argsv[0] === 'test') ? './core/config.yaml' : './resources/app/core/config.yaml', 'utf8')
 
     // Convert the YAML file content to a JavaScript object
     const data = yaml.load(yamlFile)
@@ -130,7 +132,7 @@ exports.saveConfig = (config) => {
     const configYAML = yaml.dump(config)
 
     // Write the content to the YAML file
-    fs.writeFileSync('./resources/app/core/config.yaml', configYAML, 'utf8')
+    fs.writeFileSync((argsv[0] === 'test') ? './core/config.yaml' : './resources/app/core/config.yaml', configYAML, 'utf8')
 
     // console.log('Variables saved to YAML file.');
   } catch (error) {
@@ -168,7 +170,7 @@ exports.saveVariablesToYAML = (GlobalVariables) => {
     const variablesYAML = yaml.dump(GlobalVariables)
 
     // Write the content to the YAML file
-    fs.writeFileSync('./resources/app/core/db.yaml', variablesYAML, 'utf8')
+    fs.writeFileSync((argsv[0] === 'test') ? './core/db.yaml' : './resources/app/core/db.yaml', variablesYAML, 'utf8')
 
     // console.log('Variables saved to YAML file.');
   } catch (error) {
@@ -262,8 +264,8 @@ exports.createDataYAML = (GlobalVariables, classType) => {
 // Send variable data to a WebSocket client
 exports.sendVariableData = (client, GlobalVariables, configuration, classE) => {
   if (GlobalVariables && typeof GlobalVariables === 'object') {
-    const formats = this.loadDataFromYAML('./resources/app/core/formats.yaml')
-    const translates = this.loadDataFromYAML(`./resources/app/core/translates/${configuration.lang}.yaml`)
+    const formats = this.loadDataFromYAML((argsv[0] === 'test') ? './core/formats.yaml' : './resources/app/core/formats.yaml')
+    const translates = this.loadDataFromYAML((argsv[0] === 'test') ? `./core/translates/${configuration.lang}.yaml` : `./resources/app/core/translates/${configuration.lang}.yaml`)
 
     // Send variable data to the client
     if (classE === 'home') {
