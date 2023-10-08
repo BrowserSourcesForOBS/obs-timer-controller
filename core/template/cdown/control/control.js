@@ -75,8 +75,12 @@ socket.addEventListener('message', (event) => {
         option.textContent = message.formats.langs[format]
         selectorLang.appendChild(option)
       })
-      selectorLang.value = message.config.lang
-      document.documentElement.lang = message.config.lang
+      selectorLang.value = Object.keys(message.formats.langs).includes(message.config.lang)
+        ? message.config.lang
+        : 'en'
+      document.documentElement.lang = Object.keys(message.formats.langs).includes(message.config.lang)
+        ? message.config.lang
+        : 'en'
 
       controlButton.textContent = translateElements.crono.buttons.start
       resetButton.textContent = translateElements.crono.buttons.reset

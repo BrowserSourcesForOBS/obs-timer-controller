@@ -16,7 +16,7 @@
   border: 2px solid #f44336;
   border-radius: 5px;
   color: white;
-  vertical-align: top;
+  vertical-align: bottom;
   margin-top: 3.5px;
   cursor: pointer;
   flex-grow: 1;
@@ -25,6 +25,28 @@
 .close-button:hover {
   background-color: #d9362e;
   border: 2px solid #d9362e;
+}
+
+.link-button {
+  font-size: 15px;
+  background-color: #000;
+  border: 2px solid #000;
+  border-radius: 5px;
+  color: white;
+  vertical-align: bottom;
+  margin-top: 3.5px;
+  cursor: pointer;
+  flex-grow: 1;
+}
+
+.link-button:hover {
+  background-color: #444; /* Fondo gris más oscuro al pasar el ratón */
+  border: 2px solid #444;
+}
+
+#github-button {
+  font-size: 15px;
+  color: white;
 }
 
 .language-span {

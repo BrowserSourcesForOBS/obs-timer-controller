@@ -1,4 +1,5 @@
 home:
+  close: Close the window and stop the code
   cronoTitle: TIMERS
   cdownTitle: COUNTDOWNS
   cdowntimeTitle: TIME UNTIL...

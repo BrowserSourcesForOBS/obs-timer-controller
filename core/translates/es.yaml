@@ -1,4 +1,5 @@
 home:
+  close: Cierra la ventana y detiene el código
   cronoTitle: CRONÓMETROS
   cdownTitle: TEMPORIZADORES
   cdowntimeTitle: TIEMPO HASTA...
