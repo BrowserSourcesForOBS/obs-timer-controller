@@ -15,7 +15,7 @@ body:
     id: lang-code
     attributes:
       label: Language code
-      description: ""
+      description: "You can find the language code at:"
       placeholder: eg. en
   - type: textarea
     id: translate
