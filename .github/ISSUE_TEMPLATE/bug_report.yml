@@ -7,7 +7,7 @@ body:
     id: description
     attributes:
       label: Description
-      description: "Provide a description of the bug that occurred."
+      description: "Provide a description of the issue that occurred."
     validations:
       require: true
   - type: input
@@ -45,9 +45,9 @@ body:
     validations:
       required: true
   - type: textarea
-    id: bug-steps
+    id: issue-steps
     attributes:
-      label: Steps until the bug appears
+      label: Steps until the issue appears
       description: "[optional] You can add the steps taken to be able to reproduce your problem."
       placeholder: "1. Description of step 1 ...\n2. Description of step 2 ...\n..."
   - type: textarea
