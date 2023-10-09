@@ -23,7 +23,7 @@ body:
       label: Translate
       description: "You can send the YAML file already translated or write it in this section.\n\n
       [WARNING] If you want to directly write the translation in this section, the code must start with **\`\`\`yaml** and end with **\`\`\`**. You can use the "Preview" tab to see if the code has been written correctly."
-      placeholder: "```yaml\n
+      placeholder: "\`\`º`yaml\n
       home:\n
       \tclose: Close the window and stop the code\n
       \tcronoTitle: CLOCKS\n
@@ -37,6 +37,6 @@ body:
       \t\tstart: Start\n
       \t\tpause: Pause\n
       \t\treset: Reset\n
-      ```"
+      \`\`\`"
     validations:
       require: true
