@@ -49,9 +49,7 @@ body:
     attributes:
       label: Steps until the issue appears
       description: "[optional] You can add the steps taken to be able to reproduce your problem."
-      placeholder: "1. Description of step 1 ...\n
-      2. Description of step 2 ...\n
-      ..."
+      placeholder: "1. Description of step 1 ...\n2. Description of step 2 ...\n..."
   - type: textarea
     id: expected-result
     attributes:
