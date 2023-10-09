@@ -9,7 +9,7 @@ body:
       label: Description
       description: "Provide a description of the issue that occurred."
     validations:
-      require: true
+      required: true
   - type: input
     id: code-version
     attributes:
