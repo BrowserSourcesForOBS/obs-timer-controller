@@ -1,0 +1,24 @@
+name: Feature Request
+description: Suggest an idea for this project
+title: "[SUGGESTION] Your feature request title"
+labels: "suggestion"
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description. Please elaborate.
+      description: A clear and concise description of what new functions to add or improve.
+    validations:
+      required: true
+  - type: textarea
+    id: benefit
+    attributes:
+      label: Who will this benefit?
+      description: Does this feature apply to a great portion of users?
+    validations:
+      required: true
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: "[optional] You may provide additional context or screenshots for us to better understand the need of the feature."
