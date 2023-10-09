@@ -1,0 +1,12 @@
+name: Bug Report
+description: File a bug report
+title: "[BUG]: your bug report title"
+labels: "maybe: bug"
+body:
+  - type: input
+    id: code-info-version
+    attributes:
+      label: Code Version
+      placeholder: eg. v1.0.0
+    validations:
+      required: true
