@@ -21,7 +21,7 @@ body:
     id: translate
     attributes:
       label: Translate
-      description: "You can send the YAML file already translated or write it in this section.\n\n[WARNING] If you want to directly write the translation in this section, the code must start with ```yaml and end with ```. You can use the "Preview" tab to see if the code has been written correctly."
+      description: "You can send the YAML file already translated or write it in this section.\n\n[WARNING] If you want to directly write the translation in this section, the code must start with ```yaml and end with ```. You can use the \"Preview\" tab to see if the code has been written correctly."
       placeholder: "home:\n\tclose: Close the window and stop the code\n\tcronoTitle: CLOCKS\n\tcdownTitle: TIMERS\n\tcdowntimeTitle: TIME UNTIL...\n\ttwitchextTitle: EXTENSIBLE TWITCH\n\ttimeTitle: CURRENT TIME\n\tnotycopycrono: URL copied to clipboard\ncrono:\n\tbuttons:\n\t\tstart: Start\n\t\tpause: Pause\n\t\treset: Reset"
     validations:
       require: true
