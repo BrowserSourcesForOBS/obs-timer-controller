@@ -10,3 +10,27 @@ body:
       placeholder: eg. v1.0.0
     validations:
       required: true
+  - type: dropdown
+    id: code-info-os
+    attributes:
+      label: What operating system are you using the code on?
+      options:
+        - Windows 11
+        - Windows 10
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: code-info-browser
+    attributes:
+      label: What browser are you using the code in?
+      options:
+        - Brave
+        - Google Chrome
+        - Mozilla Firefox
+        - Opera
+        - Safari
+        - Vivaldi
+        - Other
+    validations:
+      required: true
