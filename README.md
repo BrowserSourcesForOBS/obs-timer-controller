@@ -25,8 +25,7 @@
 <br>
 <p style="margin-top:-10px">
 <a href="https://github.com/BrowserSourcesForOBS/obs-timer-controller/releases/latest">
-<img src="https://img.shields.io/github/v/tag/BrowserSourcesForOBS/obs-timer-controller?style=for-the-badge&label=LATEST%20RELEASE%20VERSION
-" alt="GitHub tag (with filter)" style="vertical-align:middle">
+<img src="https://img.shields.io/github/v/tag/BrowserSourcesForOBS/obs-timer-controller?style=for-the-badge&label=LATEST%20RELEASE%20VERSION" alt="GitHub tag (with filter)" style="vertical-align:middle">
 </a>
 <a href="https://github.com/BrowserSourcesForOBS/obs-timer-controller/releases/latest">
 <img src="https://img.shields.io/github/downloads/BrowserSourcesForOBS/obs-timer-controller/total?style=for-the-badge" alt="GitHub all releases" style="vertical-align:middle">
