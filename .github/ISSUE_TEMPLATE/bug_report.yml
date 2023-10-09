@@ -27,7 +27,6 @@ body:
         - Windows 11
         - Windows 10
         - Other
-      placeholder: Windows 11
     validations:
       required: true
   - type: dropdown
@@ -43,7 +42,6 @@ body:
         - Safari
         - Vivaldi
         - Other
-      placeholder: Google Chrome
     validations:
       required: true
   - type: textarea
