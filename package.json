@@ -22,7 +22,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "node": "node . test",
-    "pkg-win": "electron-packager . OBS-Timer-Controller --platform=win32 --arch=x64 --out=dist --overwrite --icon=icon.ico --app-version=1.0.3 --author=\"XtoManuel\" --description=\"Handling browser fonts for OBS related to timers and countdowns.\""
+    "pkg-win": "electron-packager . OBS-Timer-Controller --platform=win32 --arch=x64 --app-version=1.0.3 --out=dist --overwrite --icon=icon.ico --author=\"XtoManuel\" --description=\"Handling browser fonts for OBS related to timers and countdowns.\""
   },
   "author": "XtoManuel",
   "license": "ISC",
