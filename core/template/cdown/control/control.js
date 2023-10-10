@@ -55,7 +55,7 @@ socket.addEventListener('message', (event) => {
 
     if (message.action === 'sendVariables' && message.classElement === classElement) {
       // If the message contains variable data
-      const ElementVariables = message.variables
+      const elementVariables = message.variables
       translateElements = message.translateElements
 
       // Config and translates
@@ -82,12 +82,12 @@ socket.addEventListener('message', (event) => {
         ? message.config.lang
         : 'en'
 
-      controlButton.textContent = translateElements.crono.buttons.start
-      resetButton.textContent = translateElements.crono.buttons.reset
+      controlButton.textContent = translateElements.timer.buttons.start
+      resetButton.textContent = translateElements.timer.buttons.reset
 
-      if (ElementVariables && typeof ElementVariables === 'object') {
-        checkTextTime = MsToText(ElementVariables.textmilliseconds)
-        checkHexColor = ElementVariables.colorText
+      if (elementVariables && typeof elementVariables === 'object') {
+        checkTextTime = MsToText(elementVariables.textmilliseconds)
+        checkHexColor = elementVariables.colorText
 
         // Format selector options
         formatSelector.innerHTML = ''
@@ -99,17 +99,21 @@ socket.addEventListener('message', (event) => {
         })
 
         // Perform necessary actions with the variables here
-        textMsg.textContent = ElementVariables.msgEnd
-        timeText.value = MsToText(ElementVariables.textmilliseconds)
-        formatSelector.value = ElementVariables.formatTime
-        fontSelect.value = ElementVariables.font
-        fontSize.value = ElementVariables.size
-        textFormat(ElementVariables)
-        formatAlign(ElementVariables.align)
-        colorPicker.value = ElementVariables.colorText
-        colorHex.value = ElementVariables.colorText
+        textMsg.textContent = elementVariables.msgEnd
+        if (elementVariables.msgEnd === '') {
+          textMsg.textContent = translateElements.timer.ph_msgend
+          textMsg.style.color = '#555'
+        } else { textMsg.style.color = '#000' }
+        timeText.value = MsToText(elementVariables.textmilliseconds)
+        formatSelector.value = elementVariables.formatTime
+        fontSelect.value = elementVariables.font
+        fontSize.value = elementVariables.size
+        textFormat(elementVariables)
+        formatAlign(elementVariables.align)
+        colorPicker.value = elementVariables.colorText
+        colorHex.value = elementVariables.colorText
         if (translateElements) {
-          updateControlButton(ElementVariables.status)
+          updateControlButton(elementVariables.status)
         }
       } else {
         console.log('The server did not return valid data.')
@@ -117,6 +121,10 @@ socket.addEventListener('message', (event) => {
     } else {
       if (message[classElement].status !== 'started') {
         textMsg.textContent = message[classElement].msgEnd
+        if (message[classElement].msgEnd === '') {
+          textMsg.textContent = translateElements.timer.ph_msgend
+          textMsg.style.color = '#555'
+        } else { textMsg.style.color = '#000' }
         timeText.value = MsToText(message[classElement].textmilliseconds)
         formatSelector.value = message[classElement].formatTime
         fontSelect.value = message[classElement].font
@@ -149,7 +157,7 @@ selectorLang.addEventListener('change', () => {
 })
 
 controlButton.addEventListener('click', () => {
-  if (controlButton.textContent === translateElements.crono.buttons.start) {
+  if (controlButton.textContent === translateElements.timer.buttons.start) {
     socket.send(JSON.stringify({ action: 'startCdown', classElement }))
   } else {
     socket.send(JSON.stringify({ action: 'pauseCdown', classElement }))
@@ -209,8 +217,19 @@ subContainer.addEventListener('click', (event) => {
   }
 })
 
+textMsg.addEventListener('focus', () => {
+  if (textMsg.textContent === translateElements.timer.ph_msgend) {
+    textMsg.textContent = ''
+    textMsg.style.color = '#000'
+  }
+})
+
 textMsg.addEventListener('blur', () => {
   socket.send(JSON.stringify({ action: 'editMsgCdown', msg: textMsg.textContent, classElement }))
+  if (textMsg.textContent === '') {
+    textMsg.textContent = translateElements.timer.ph_msgend
+    textMsg.style.color = '#555'
+  } else { textMsg.style.color = '#000' }
 })
 
 formatSelector.addEventListener('change', () => {
@@ -309,17 +328,17 @@ function updateControlButton (status) {
   controlButton.style.width = maxWidth
 
   if (status === 'started') {
-    controlButton.textContent = translateElements.crono.buttons.pause
+    controlButton.textContent = translateElements.timer.buttons.pause
   } else {
-    controlButton.textContent = translateElements.crono.buttons.start
+    controlButton.textContent = translateElements.timer.buttons.start
   }
 }
 
 function getMaxButtonWidth () {
   const widths = []
 
-  Object.keys(translateElements.crono.buttons).forEach((value) => {
-    controlButton.textContent = translateElements.crono.buttons[value]
+  Object.keys(translateElements.timer.buttons).forEach((value) => {
+    controlButton.textContent = translateElements.timer.buttons[value]
     widths.push(parseFloat(window.getComputedStyle(controlButton).getPropertyValue('width')))
   })
   // Get the maximum of the two widths

@@ -23,7 +23,7 @@ const socket = new WebSocket('ws://localhost:3000')
 
 const classElement = window.location.href.split('/')[3]
 titlePage.textContent = classElement + ' - Control'
-// let translateElements
+let translateElements
 
 let checkHexColor
 
@@ -55,7 +55,7 @@ socket.addEventListener('message', (event) => {
     if (message.action === 'sendVariables' && message.classElement === classElement) {
       // If the message contains variable data
       const elementVariables = message.variables
-      // translateElements = message.translateElements;
+      translateElements = message.translateElements
 
       // Config and translates
       switchTheme.checked = message.config.themedark
@@ -81,6 +81,8 @@ socket.addEventListener('message', (event) => {
         ? message.config.lang
         : 'en'
 
+      textMsg.innerHTML = 'Hola'
+
       if (elementVariables && typeof elementVariables === 'object') {
         checkHexColor = elementVariables.colorText
 
@@ -104,6 +106,10 @@ socket.addEventListener('message', (event) => {
 
         // Perform necessary actions with the variables here
         textMsg.textContent = elementVariables.msgEnd
+        if (elementVariables.msgEnd === '') {
+          textMsg.textContent = translateElements.timer.ph_msgend
+          textMsg.style.color = '#555'
+        } else { textMsg.style.color = '#000' }
         timeData.value = new Date(elementVariables.endDatetime).toLocaleString('en-CA', { timeZone: elementVariables.timezone, hour12: false }).replace(/,\s/, 'T')
         timezoneSelector.value = elementVariables.timezone
         formatSelector.value = elementVariables.formatTime
@@ -182,8 +188,19 @@ subContainer.addEventListener('click', (event) => {
   }
 })
 
+textMsg.addEventListener('focus', () => {
+  if (textMsg.textContent === translateElements.timer.ph_msgend) {
+    textMsg.textContent = ''
+    textMsg.style.color = '#000'
+  }
+})
+
 textMsg.addEventListener('blur', () => {
   socket.send(JSON.stringify({ action: 'editMsgCdownTime', msg: textMsg.textContent, classElement }))
+  if (textMsg.textContent === '') {
+    textMsg.textContent = translateElements.timer.ph_msgend
+    textMsg.style.color = '#555'
+  } else { textMsg.style.color = '#000' }
 })
 
 formatSelector.addEventListener('change', () => {

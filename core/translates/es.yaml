@@ -1,13 +1,15 @@
 home:
   close: Cierra la ventana y detiene el código
+  wiki: Documentación
   cronoTitle: CRONÓMETROS
   cdownTitle: TEMPORIZADORES
   cdowntimeTitle: TIEMPO HASTA...
   twitchextTitle: EXTENSIBLE TWITCH
   timeTitle: HORA ACTUAL
   notycopycrono: URL copiada al portapapeles
-crono:
+timer:
   buttons:
     start: Iniciar
     pause: Pausar
     reset: Reiniciar
+  ph_msgend: Mensaje a mostrar cuando finalice el tiempo

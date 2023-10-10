@@ -1,6 +1,6 @@
 {
   "name": "obs-timer-controller",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Handling browser fonts for OBS related to timers and countdowns.",
   "main": "server.js",
   "repository": {
@@ -22,12 +22,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "node": "node . test",
-    "pkg": "electron-packager . OBS-Timer-Controller --platform=win32 --arch=x64 --out=dist --overwrite --icon=icon.ico --app-version=1.0.1 --author=\"XtoManuel\" --description=\"Handling browser fonts for OBS related to timers and countdowns.\""
+    "pkg-win": "electron-packager . OBS-Timer-Controller --platform=win32 --arch=x64 --out=dist --overwrite --icon=icon.ico --app-version=1.0.2 --author=\"XtoManuel\" --description=\"Handling browser fonts for OBS related to timers and countdowns.\""
   },
   "author": "XtoManuel",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^26.3.0",
+    "electron": "^27.0.0",
     "electron-packager": "^17.1.2"
   }
 }
