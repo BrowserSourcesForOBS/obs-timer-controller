@@ -44,7 +44,8 @@
   border: 2px solid #444;
 }
 
-#github-button {
+#github-button,
+#wiki-button {
   font-size: 15px;
   color: white;
 }

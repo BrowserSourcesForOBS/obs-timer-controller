@@ -80,8 +80,8 @@ socket.addEventListener('message', (event) => {
         ? message.config.lang
         : 'en'
 
-      controlButton.textContent = translateElements.crono.buttons.start
-      resetButton.textContent = translateElements.crono.buttons.reset
+      controlButton.textContent = translateElements.timer.buttons.start
+      resetButton.textContent = translateElements.timer.buttons.reset
 
       if (elementVariables && typeof elementVariables === 'object') {
         checkHexColor = elementVariables.colorText
@@ -139,7 +139,7 @@ languageSelector.addEventListener('change', () => {
 })
 
 controlButton.addEventListener('click', () => {
-  if (controlButton.textContent === translateElements.crono.buttons.start) {
+  if (controlButton.textContent === translateElements.timer.buttons.start) {
     socket.send(JSON.stringify({ action: 'startCrono', classElement }))
   } else {
     socket.send(JSON.stringify({ action: 'pauseCrono', classElement }))
@@ -265,17 +265,17 @@ function updateControlButton (status) {
   controlButton.style.width = maxWidth
 
   if (status === 'started') {
-    controlButton.textContent = translateElements.crono.buttons.pause
+    controlButton.textContent = translateElements.timer.buttons.pause
   } else {
-    controlButton.textContent = translateElements.crono.buttons.start
+    controlButton.textContent = translateElements.timer.buttons.start
   }
 }
 
 function getMaxButtonWidth () {
   const widths = []
 
-  Object.keys(translateElements.crono.buttons).forEach((value) => {
-    controlButton.textContent = translateElements.crono.buttons[value]
+  Object.keys(translateElements.timer.buttons).forEach((value) => {
+    controlButton.textContent = translateElements.timer.buttons[value]
     widths.push(parseFloat(window.getComputedStyle(controlButton).getPropertyValue('width')))
   })
 

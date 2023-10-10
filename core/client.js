@@ -5,6 +5,7 @@ const buttonCdownContainer = document.getElementById('button-container-cdown')
 const buttonCdowntimeContainer = document.getElementById('button-container-cdowntime')
 const buttonTimeContainer = document.getElementById('button-container-time')
 const buttonClose = document.getElementById('stop-code')
+const buttonWiki = document.getElementById('button-wiki')
 const languageSelector = document.getElementById('language-selector')
 const switchTheme = document.getElementById('switch-theme')
 const titleCrono = document.getElementById('crono-title')
@@ -36,6 +37,7 @@ socket.addEventListener('message', (event) => {
     // Configuration and translation
     switchTheme.checked = message.config.themedark
     buttonClose.title = translateElements.home.close
+    buttonWiki.title = translateElements.home.wiki
     if (message.config.themedark) {
       document.body.classList.remove('light-theme')
       document.body.classList.add('dark-theme')

@@ -33,17 +33,17 @@
 <a href="https://nodejs.org/en">
 <img src="https://img.shields.io/badge/MADE%20WITH-NodeJS-yellow?style=for-the-badge&logo=javascript" alt="Made with NodeJS" style="vertical-align:middle">
 </a>
-<a>
+<a href="https://github.com/BrowserSourcesForOBS/obs-timer-controller">
 <img src="https://img.shields.io/badge/MADE%20WITH-HTML-orange?style=for-the-badge&logo=html5" alt="Made with HTML" style="vertical-align:middle">
 </a>
-<a>
+<a href="https://github.com/BrowserSourcesForOBS/obs-timer-controller">
 <img src="https://img.shields.io/badge/MADE%20WITH-CSS-blue?style=for-the-badge&logo=css3" alt="Made with CSS" style="vertical-align:middle">
 </a>
 <br>
 <a href="https://nodejs.org/en/download">
 <img src="https://img.shields.io/badge/VERSION-18.18.0%20LTS-yellow?style=for-the-badge&logo=javascript" alt="NodeJS version" style="vertical-align:middle">
 </a>
-<a href="https://nodejs.org/en/download">
+<a href="https://www.npmjs.com/">
 <img src="https://img.shields.io/badge/VERSION-10.2.0-red?style=for-the-badge&logo=npm" alt="npm version" style="vertical-align:middle">
 </a>
 </div>
@@ -69,4 +69,4 @@ The codes have been created with my current knowledge and may contain errors or 
 
 ### :book: Documentation
 
-~~WIKI~~ (In construction)
+#### [WIKI](https://github.com/BrowserSourcesForOBS/obs-timer-controller/wiki 'WIKI')
