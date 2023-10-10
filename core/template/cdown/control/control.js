@@ -86,7 +86,7 @@ socket.addEventListener('message', (event) => {
       resetButton.textContent = translateElements.timer.buttons.reset
 
       if (elementVariables && typeof elementVariables === 'object') {
-        checkTextTime = MsToText(elementVariables.textmilliseconds)
+        checkTextTime = MsToText(elementVariables.textMilliseconds)
         checkHexColor = elementVariables.colorText
 
         // Format selector options
@@ -104,7 +104,7 @@ socket.addEventListener('message', (event) => {
           textMsg.textContent = translateElements.timer.ph_msgend
           textMsg.style.color = '#555'
         } else { textMsg.style.color = '#000' }
-        timeText.value = MsToText(elementVariables.textmilliseconds)
+        timeText.value = MsToText(elementVariables.textMilliseconds)
         formatSelector.value = elementVariables.formatTime
         fontSelect.value = elementVariables.font
         fontSize.value = elementVariables.size
@@ -125,7 +125,7 @@ socket.addEventListener('message', (event) => {
           textMsg.textContent = translateElements.timer.ph_msgend
           textMsg.style.color = '#555'
         } else { textMsg.style.color = '#000' }
-        timeText.value = MsToText(message[classElement].textmilliseconds)
+        timeText.value = MsToText(message[classElement].textMilliseconds)
         formatSelector.value = message[classElement].formatTime
         fontSelect.value = message[classElement].font
         fontSize.value = message[classElement].size
@@ -172,7 +172,7 @@ timeText.addEventListener('change', () => {
   const textTime = timeText.value.trim()
 
   // Regular expression to check the correct time format
-  const timeRegex = /^([0-9]+):([0-5]?[0-9]):([0-5]?[0-9])$/
+  const timeRegex = /^(\d+):([0-5]?\d):([0-5]?\d)$/
 
   if (timeRegex.test(textTime)) {
     checkTextTime = textTime
@@ -233,11 +233,11 @@ textMsg.addEventListener('blur', () => {
 })
 
 formatSelector.addEventListener('change', () => {
-  socket.send(JSON.stringify({ action: 'changeFormatCdown', format: formatSelector.value, classElement }))
+  socket.send(JSON.stringify({ action: 'changeFormat', format: formatSelector.value, classElement }))
 })
 
 fontSelect.addEventListener('change', () => {
-  socket.send(JSON.stringify({ action: 'changeFontCdown', font: fontSelect.value, classElement }))
+  socket.send(JSON.stringify({ action: 'changeFont', font: fontSelect.value, classElement }))
 })
 
 fontSize.addEventListener('change', () => {
@@ -255,37 +255,37 @@ fontSize.addEventListener('change', () => {
   }
 
   // Send the new size to the server
-  socket.send(JSON.stringify({ action: 'changeSizeCdown', size: newSize, classElement }))
+  socket.send(JSON.stringify({ action: 'changeSize', size: newSize, classElement }))
 })
 
 boldButton.addEventListener('click', () => {
-  socket.send(JSON.stringify({ action: 'textFormatCdown', format: 'bold', classElement }))
+  socket.send(JSON.stringify({ action: 'textFormat', format: 'bold', classElement }))
 })
 
 italicButton.addEventListener('click', () => {
-  socket.send(JSON.stringify({ action: 'textFormatCdown', format: 'italic', classElement }))
+  socket.send(JSON.stringify({ action: 'textFormat', format: 'italic', classElement }))
 })
 
 underlineButton.addEventListener('click', () => {
-  socket.send(JSON.stringify({ action: 'textFormatCdown', format: 'underline', classElement }))
+  socket.send(JSON.stringify({ action: 'textFormat', format: 'underline', classElement }))
 })
 
 alignLeftButton.addEventListener('click', () => {
-  socket.send(JSON.stringify({ action: 'alignCdown', align: 'left', classElement }))
+  socket.send(JSON.stringify({ action: 'align', align: 'left', classElement }))
 })
 
 alignCenterButton.addEventListener('click', () => {
-  socket.send(JSON.stringify({ action: 'alignCdown', align: 'center', classElement }))
+  socket.send(JSON.stringify({ action: 'align', align: 'center', classElement }))
 })
 
 alignRightButton.addEventListener('click', () => {
-  socket.send(JSON.stringify({ action: 'alignCdown', align: 'right', classElement }))
+  socket.send(JSON.stringify({ action: 'align', align: 'right', classElement }))
 })
 
 colorPicker.addEventListener('change', () => {
   checkHexColor = colorPicker.value.toUpperCase()
   // If the hexadecimal code is valid, send the color to the server
-  socket.send(JSON.stringify({ action: 'changeColorCdown', color: colorPicker.value.toUpperCase(), classElement }))
+  socket.send(JSON.stringify({ action: 'changeColor', color: colorPicker.value.toUpperCase(), classElement }))
   colorHex.value = checkHexColor
 })
 
@@ -298,7 +298,7 @@ colorHex.addEventListener('change', () => {
   if (hexRegex.test(hexColor)) {
     checkHexColor = hexColor.toUpperCase()
     // If the hexadecimal code is valid, send the color to the server
-    socket.send(JSON.stringify({ action: 'changeColorCdown', color: checkHexColor, classElement }))
+    socket.send(JSON.stringify({ action: 'changeColor', color: checkHexColor, classElement }))
     colorPicker.value = checkHexColor
     colorHex.value = checkHexColor
   } else {

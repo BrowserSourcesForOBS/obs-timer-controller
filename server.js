@@ -25,9 +25,12 @@ const {
   startTimer,
   pauseCrono,
   pauseCdown,
+  pauseExtensible,
   resetCrono,
   resetCdown,
   stopCdown,
+  stopExtensible,
+  resetExtensible,
   sendVariableData,
   initConfig,
   saveConfig,
@@ -95,7 +98,7 @@ wss.on('connection', (ws) => {
           client.send(JSON.stringify({ action: 'reload' }))
         }
       })
-    } else if (data.action === 'startCrono' || data.action === 'startCdown') {
+    } else if (data.action === 'startCrono' || data.action === 'startCdown' || data.action === 'startExtensible') {
       // Start the timer when receiving the "start" action
       startTimer(wss, GlobalVariables, data.classElement)
     } else if (data.action === 'pauseCrono') {
@@ -104,15 +107,24 @@ wss.on('connection', (ws) => {
     } else if (data.action === 'pauseCdown') {
       // Pause the countdown when receiving the "pause" action
       pauseCdown(wss, GlobalVariables, data.classElement)
+    } else if (data.action === 'pauseExtensible') {
+      // Pause the countdown when receiving the "pause" action
+      pauseExtensible(wss, GlobalVariables, data.classElement)
     } else if (data.action === 'resetCrono') {
       // Reset the timer when receiving the "reset" action
       resetCrono(wss, GlobalVariables, data.classElement)
     } else if (data.action === 'resetCdown') {
       // Reset the countdown when receiving the "reset" action
       resetCdown(wss, GlobalVariables, data.classElement)
+    } else if (data.action === 'resetExtensible') {
+      // Reset the countdown when receiving the "reset" action
+      resetExtensible(wss, GlobalVariables, data.classElement)
     } else if (data.action === 'stopCdown') {
       // Stop the countdown when receiving the "stop" action
       stopCdown(wss, GlobalVariables, data.classElement)
+    } else if (data.action === 'stopExtensible') {
+      // Stop the countdown when receiving the "stop" action
+      stopExtensible(wss, GlobalVariables, data.classElement)
     } else if (data.action === 'changeTimeCdown' && data.time) {
       // Change the time format when receiving the "changeFormat" action
       GlobalVariables[data.classElement].textMilliseconds = data.time
@@ -123,7 +135,7 @@ wss.on('connection', (ws) => {
         }
       })
       saveVariablesToYAML(GlobalVariables)
-      if (GlobalVariables[data.classElement].status === 'stopped') {
+      if (GlobalVariables[data.classElement].status === 'ended') {
         resetCdown(wss, GlobalVariables, data.classElement)
       }
     } else if (data.action === 'changeTimeCdownTime' && data.time) {
@@ -136,6 +148,19 @@ wss.on('connection', (ws) => {
         }
       })
       saveVariablesToYAML(GlobalVariables)
+    } else if (data.action === 'changeTimeExtensible' && data.time) {
+      // Change the time format when receiving the "changeFormat" action
+      GlobalVariables[data.classElement].textMilliseconds = data.time
+      // Transmit the updated format to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(GlobalVariables))
+        }
+      })
+      saveVariablesToYAML(GlobalVariables)
+      if (GlobalVariables[data.classElement].status === 'ended') {
+        resetExtensible(wss, GlobalVariables, data.classElement)
+      }
     } else if (
       data.action === 'changeTimezoneCdownTime' ||
       data.action === 'changeTimezoneTime'
@@ -149,7 +174,9 @@ wss.on('connection', (ws) => {
           client.send(JSON.stringify({ action: 'reload' }))
         }
       })
-    } else if (data.action === 'editMsgCdown' || data.action === 'editMsgCdownTime') {
+    } else if (data.action === 'editMsgCdown' ||
+    data.action === 'editMsgCdownTime' ||
+    data.action === 'editMsgExtensible') {
       GlobalVariables[data.classElement].msgEnd = data.msg
       // Transmit the updated format to all WebSocket clients
       wss.clients.forEach((client) => {
@@ -158,13 +185,7 @@ wss.on('connection', (ws) => {
         }
       })
       saveVariablesToYAML(GlobalVariables)
-    } else if (
-      (data.action === 'changeFormatCrono' ||
-        data.action === 'changeFormatCdown' ||
-        data.action === 'changeFormatCdownTime' ||
-        data.action === 'changeFormatTime') &&
-      data.format
-    ) {
+    } else if (data.action === 'changeFormat' && data.format) {
       const classElement = data.classElement
       GlobalVariables[classElement].formatTime = data.format
 
@@ -177,19 +198,19 @@ wss.on('connection', (ws) => {
       saveVariablesToYAML(GlobalVariables)
     } else if (
       data.action === 'editTimeCrono' ||
-    data.action === 'editTimeCdown'
+    (data.action === 'editTimeCdown' && GlobalVariables[data.classElement].status === 'ended')
     ) {
       editTimeTimer(wss, GlobalVariables, data.time, data.classElement)
     } else if (data.action === 'editTimeCdownTime') {
       editTimeCdowntime(wss, GlobalVariables, data.time, data.classElement)
-    } else if (
-      (data.action === 'changeFontCrono' ||
-        data.action === 'changeFontCdown' ||
-        data.action === 'changeFontCdownTime' ||
-        data.action === 'changeFontTime') &&
-      data.font
+    } else if (data.action === 'editTimeExtensible' && (
+      GlobalVariables[data.classElement].status === 'started' ||
+      (GlobalVariables[data.classElement].status === 'paused' && GlobalVariables[data.classElement].enablePauseAdd) ||
+      (GlobalVariables[data.classElement].status === 'stopped' && GlobalVariables[data.classElement].enableStopAdd))
     ) {
-      // Change the font format when receiving the "changeFormatTimer"
+      editTimeTimer(wss, GlobalVariables, data.time, data.classElement)
+    } else if (data.action === 'changeFont' && data.font) {
+      // Change the font format when receiving the "changeFormatr"
       GlobalVariables[data.classElement].font = data.font
 
       // Transmit the updated format to all WebSocket clients
@@ -199,13 +220,7 @@ wss.on('connection', (ws) => {
         }
       })
       saveVariablesToYAML(GlobalVariables)
-    } else if (
-      (data.action === 'changeSizeCrono' ||
-        data.action === 'changeSizeCdown' ||
-        data.action === 'changeSizeCdownTime' ||
-        data.action === 'changeSizeTime') &&
-      data.size
-    ) {
+    } else if (data.action === 'changeSize' && data.size) {
       // Change the font size when receiving the "changeFormat"
       GlobalVariables[data.classElement].size = data.size
 
@@ -216,12 +231,7 @@ wss.on('connection', (ws) => {
         }
       })
       saveVariablesToYAML(GlobalVariables)
-    } else if (
-      data.action === 'textFormatCrono' ||
-      data.action === 'textFormatCdown' ||
-      data.action === 'textFormatCdownTime' ||
-      data.action === 'textFormatTime'
-    ) {
+    } else if (data.action === 'textFormat') {
       // Change the text format when receiving the "changeFormat"
       switch (data.format) {
         case 'bold':
@@ -241,12 +251,7 @@ wss.on('connection', (ws) => {
         }
       })
       saveVariablesToYAML(GlobalVariables)
-    } else if (
-      data.action === 'alignCrono' ||
-      data.action === 'alignCdown' ||
-      data.action === 'alignCdownTime' ||
-      data.action === 'alignTime'
-    ) {
+    } else if (data.action === 'align') {
       // Change the text alignment when receiving the "changeFormat"
       GlobalVariables[data.classElement].align = data.align
 
@@ -257,12 +262,7 @@ wss.on('connection', (ws) => {
         }
       })
       saveVariablesToYAML(GlobalVariables)
-    } else if (
-      data.action === 'changeColorCrono' ||
-      data.action === 'changeColorCdown' ||
-      data.action === 'changeColorCdownTime' ||
-      data.action === 'changeColorTime'
-    ) {
+    } else if (data.action === 'changeColor') {
       // Change the text color when receiving the "changeFormat"
       GlobalVariables[data.classElement].colorText = data.color
 

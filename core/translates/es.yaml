@@ -4,9 +4,9 @@ home:
   cronoTitle: CRONÓMETROS
   cdownTitle: TEMPORIZADORES
   cdowntimeTitle: TIEMPO HASTA...
-  twitchextTitle: EXTENSIBLE TWITCH
+  extensibleTitle: STREAM EXTENSIBLE
   timeTitle: HORA ACTUAL
-  notycopycrono: URL copiada al portapapeles
+  notycopy: URL copiada al portapapeles
 timer:
   buttons:
     start: Iniciar

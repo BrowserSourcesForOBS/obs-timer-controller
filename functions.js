@@ -223,7 +223,7 @@ exports.createDataYAML = (GlobalVariables, classType) => {
     GlobalVariables[newKey].status = 'stopped'
     GlobalVariables[newKey].startTime = 0
     GlobalVariables[newKey].milliseconds = 60000
-    GlobalVariables[newKey].textmilliseconds = 60000
+    GlobalVariables[newKey].textMilliseconds = 60000
     GlobalVariables[newKey].formatTime = 'MM:ss'
     GlobalVariables[newKey].font = 'Arial'
     GlobalVariables[newKey].size = 50
@@ -245,6 +245,23 @@ exports.createDataYAML = (GlobalVariables, classType) => {
     GlobalVariables[newKey].align = 'center'
     GlobalVariables[newKey].colorText = '#000000'
     GlobalVariables[newKey].msgEnd = ''
+  } else if (classType === 'extensible') {
+    GlobalVariables[newKey].status = 'stopped'
+    GlobalVariables[newKey].startTime = 0
+    GlobalVariables[newKey].millisecondsTotal = 0
+    GlobalVariables[newKey].milliseconds = 60000
+    GlobalVariables[newKey].textMilliseconds = 60000
+    GlobalVariables[newKey].formatTime = 'MM:ss'
+    GlobalVariables[newKey].font = 'Arial'
+    GlobalVariables[newKey].size = 50
+    GlobalVariables[newKey].bold = false
+    GlobalVariables[newKey].italic = false
+    GlobalVariables[newKey].underline = false
+    GlobalVariables[newKey].align = 'center'
+    GlobalVariables[newKey].colorText = '#000000'
+    GlobalVariables[newKey].msgEnd = ''
+    GlobalVariables[newKey].enablePauseAdd = false
+    GlobalVariables[newKey].enableStopAdd = false
   } else if (classType === 'time') {
     GlobalVariables[newKey].timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
     GlobalVariables[newKey].formatTime = 'hh:mm:ss'
@@ -329,6 +346,24 @@ exports.pauseCdown = (wss, GlobalVariables, classElement) => {
   }
 }
 
+// Pause the extensible
+exports.pauseExtensible = (wss, GlobalVariables, classElement) => {
+  if (GlobalVariables[classElement].status === 'started') {
+    GlobalVariables[classElement].status = 'paused'
+    GlobalVariables[classElement].millisecondsTotal += Date.now() - GlobalVariables[classElement].startTime
+    GlobalVariables[classElement].milliseconds -= Date.now() - GlobalVariables[classElement].startTime
+
+    // Update all WebSocket clients with countdown status
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(GlobalVariables))
+      }
+    })
+
+    this.saveVariablesToYAML(GlobalVariables)
+  }
+}
+
 // Reset the stopwatch
 exports.resetCrono = (wss, GlobalVariables, classElement) => {
   GlobalVariables[classElement].status = 'stopped'
@@ -348,7 +383,24 @@ exports.resetCrono = (wss, GlobalVariables, classElement) => {
 // Reset the countdown
 exports.resetCdown = (wss, GlobalVariables, classElement) => {
   GlobalVariables[classElement].status = 'stopped'
-  GlobalVariables[classElement].milliseconds = GlobalVariables[classElement].textmilliseconds
+  GlobalVariables[classElement].milliseconds = GlobalVariables[classElement].textMilliseconds
+  GlobalVariables[classElement].startTime = 0
+
+  // Update all WebSocket clients with countdown status
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(GlobalVariables))
+    }
+  })
+
+  this.saveVariablesToYAML(GlobalVariables)
+}
+
+// Reset the extensible
+exports.resetExtensible = (wss, GlobalVariables, classElement) => {
+  GlobalVariables[classElement].status = 'stopped'
+  GlobalVariables[classElement].millisecondsTotal = 0
+  GlobalVariables[classElement].milliseconds = GlobalVariables[classElement].textMilliseconds
   GlobalVariables[classElement].startTime = 0
 
   // Update all WebSocket clients with countdown status
@@ -363,8 +415,25 @@ exports.resetCdown = (wss, GlobalVariables, classElement) => {
 
 // Stop the countdown
 exports.stopCdown = (wss, GlobalVariables, classElement) => {
-  GlobalVariables[classElement].status = 'stopped'
+  GlobalVariables[classElement].status = 'ended'
   GlobalVariables[classElement].milliseconds = 0
+
+  // Update all WebSocket clients with countdown status
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(GlobalVariables))
+    }
+  })
+
+  this.saveVariablesToYAML(GlobalVariables)
+}
+
+// Stop the countdown
+exports.stopExtensible = (wss, GlobalVariables, classElement) => {
+  GlobalVariables[classElement].status = 'ended'
+  GlobalVariables[classElement].milliseconds = 0
+  GlobalVariables[classElement].millisecondsTotal += Date.now() - GlobalVariables[classElement].startTime
+  GlobalVariables[classElement].millisecondsTotal = Math.round(GlobalVariables[classElement].millisecondsTotal / 1000) * 1000
 
   // Update all WebSocket clients with countdown status
   wss.clients.forEach((client) => {

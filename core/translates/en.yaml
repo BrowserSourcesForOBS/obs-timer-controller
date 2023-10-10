@@ -4,9 +4,9 @@ home:
   cronoTitle: CLOCKS
   cdownTitle: TIMERS
   cdowntimeTitle: TIME UNTIL...
-  twitchextTitle: EXTENSIBLE TWITCH
+  extensibleTitle: STREAM EXTENSIBLE
   timeTitle: CURRENT TIME
-  notycopycrono: URL copied to clipboard
+  notycopy: URL copied to clipboard
 timer:
   buttons:
     start: Start

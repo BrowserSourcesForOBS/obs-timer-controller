@@ -204,11 +204,11 @@ textMsg.addEventListener('blur', () => {
 })
 
 formatSelector.addEventListener('change', () => {
-  socket.send(JSON.stringify({ action: 'changeFormatCdownTime', format: formatSelector.value, classElement }))
+  socket.send(JSON.stringify({ action: 'changeFormat', format: formatSelector.value, classElement }))
 })
 
 fontSelect.addEventListener('change', () => {
-  socket.send(JSON.stringify({ action: 'changeFontCdownTime', font: fontSelect.value, classElement }))
+  socket.send(JSON.stringify({ action: 'changeFont', font: fontSelect.value, classElement }))
 })
 
 fontSize.addEventListener('change', () => {
@@ -226,37 +226,37 @@ fontSize.addEventListener('change', () => {
   }
 
   // Send the new size to the server
-  socket.send(JSON.stringify({ action: 'changeSizeCdownTime', size: newSize, classElement }))
+  socket.send(JSON.stringify({ action: 'changeSize', size: newSize, classElement }))
 })
 
 boldButton.addEventListener('click', () => {
-  socket.send(JSON.stringify({ action: 'textFormatCdownTime', format: 'bold', classElement }))
+  socket.send(JSON.stringify({ action: 'textFormat', format: 'bold', classElement }))
 })
 
 italicButton.addEventListener('click', () => {
-  socket.send(JSON.stringify({ action: 'textFormatCdownTime', format: 'italic', classElement }))
+  socket.send(JSON.stringify({ action: 'textFormat', format: 'italic', classElement }))
 })
 
 underlineButton.addEventListener('click', () => {
-  socket.send(JSON.stringify({ action: 'textFormatCdownTime', format: 'underline', classElement }))
+  socket.send(JSON.stringify({ action: 'textFormat', format: 'underline', classElement }))
 })
 
 alignLeftButton.addEventListener('click', () => {
-  socket.send(JSON.stringify({ action: 'alignCdownTime', align: 'left', classElement }))
+  socket.send(JSON.stringify({ action: 'align', align: 'left', classElement }))
 })
 
 alignCenterButton.addEventListener('click', () => {
-  socket.send(JSON.stringify({ action: 'alignCdownTime', align: 'center', classElement }))
+  socket.send(JSON.stringify({ action: 'align', align: 'center', classElement }))
 })
 
 alignRightButton.addEventListener('click', () => {
-  socket.send(JSON.stringify({ action: 'alignCdownTime', align: 'right', classElement }))
+  socket.send(JSON.stringify({ action: 'align', align: 'right', classElement }))
 })
 
 colorPicker.addEventListener('change', () => {
   checkHexColor = colorPicker.value.toUpperCase()
   // If the hexadecimal code is valid, send the color to the server
-  socket.send(JSON.stringify({ action: 'changeColorCdownTime', color: colorPicker.value.toUpperCase(), classElement }))
+  socket.send(JSON.stringify({ action: 'changeColor', color: colorPicker.value.toUpperCase(), classElement }))
   colorHex.value = checkHexColor
 })
 
@@ -269,7 +269,7 @@ colorHex.addEventListener('change', () => {
   if (hexRegex.test(hexColor)) {
     checkHexColor = hexColor.toUpperCase()
     // If the hexadecimal code is valid, send the color to the server
-    socket.send(JSON.stringify({ action: 'changeColorCdownTime', color: checkHexColor, classElement }))
+    socket.send(JSON.stringify({ action: 'changeColor', color: checkHexColor, classElement }))
     colorPicker.value = checkHexColor
     colorHex.value = checkHexColor
   } else {
