@@ -37,6 +37,8 @@
   margin-top: 3.5px;
   cursor: pointer;
   flex-grow: 1;
+  margin-right: 2.5px;
+  margin-left: 2.5px;
 }
 
 .link-button:hover {

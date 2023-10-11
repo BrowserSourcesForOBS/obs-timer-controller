@@ -12,4 +12,6 @@ timer:
     start: Iniciar
     pause: Pausar
     reset: Reiniciar
-  ph_msgend: Mensaje a mostrar cuando finalice el tiempo
+  phMsgEnd: Mensaje a mostrar cuando finalice el tiempo
+  enablePauseAdd: Habilitado el permiso para añadir tiempo cuando el tiempo está pausado
+  enableStopAdd: Habilitado el permiso para añadir tiempo cuando el tiempo aún no se ha iniciado

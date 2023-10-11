@@ -251,7 +251,8 @@ exports.createDataYAML = (GlobalVariables, classType) => {
     GlobalVariables[newKey].millisecondsTotal = 0
     GlobalVariables[newKey].milliseconds = 60000
     GlobalVariables[newKey].textMilliseconds = 60000
-    GlobalVariables[newKey].formatTime = 'MM:ss'
+    GlobalVariables[newKey].formatTimeCrono = 'HH:mm:ss'
+    GlobalVariables[newKey].formatTimeCdown = 'HH:mm:ss'
     GlobalVariables[newKey].font = 'Arial'
     GlobalVariables[newKey].size = 50
     GlobalVariables[newKey].bold = false

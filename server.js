@@ -185,9 +185,38 @@ wss.on('connection', (ws) => {
         }
       })
       saveVariablesToYAML(GlobalVariables)
-    } else if (data.action === 'changeFormat' && data.format) {
+    } else if (data.action === 'checkboxStopAdd') {
+      // Change the text format when receiving the "changeFormat"
+      GlobalVariables[data.classElement].enableStopAdd = data.value
+      // Transmit the updated format to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(GlobalVariables))
+        }
+      })
+      saveVariablesToYAML(GlobalVariables)
+    } else if (data.action === 'checkboxPauseAdd') {
+      // Change the text format when receiving the "changeFormat"
+      GlobalVariables[data.classElement].enablePauseAdd = data.value
+      // Transmit the updated format to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(GlobalVariables))
+        }
+      })
+      saveVariablesToYAML(GlobalVariables)
+    } else if ((data.action === 'changeFormat' ||
+    data.action === 'changeFormatExtCrono' ||
+    data.action === 'changeFormatExtCdown'
+    ) && data.format) {
       const classElement = data.classElement
-      GlobalVariables[classElement].formatTime = data.format
+      if (data.action === 'changeFormatExtCrono') {
+        GlobalVariables[classElement].formatTimeCrono = data.format
+      } else if (data.action === 'changeFormatExtCdown') {
+        GlobalVariables[classElement].formatTimeCdown = data.format
+      } else {
+        GlobalVariables[classElement].formatTime = data.format
+      }
 
       wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {

@@ -1,8 +1,8 @@
 home:
   close: Close the window and stop the code
   wiki: Documentation
-  cronoTitle: CLOCKS
-  cdownTitle: TIMERS
+  cronoTitle: CHRONOMETERS
+  cdownTitle: COUNTDOWNS
   cdowntimeTitle: TIME UNTIL...
   extensibleTitle: STREAM EXTENSIBLE
   timeTitle: CURRENT TIME
@@ -12,4 +12,6 @@ timer:
     start: Start
     pause: Pause
     reset: Reset
-  ph_msgend: Message to display when time expires
+  phMsgEnd: Message to display when time expires
+  enablePauseAdd: Enabled permission to add time when time is paused
+  enableStopAdd: Enabled permission to add time when time has not yet started

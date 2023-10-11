@@ -31,12 +31,12 @@ socket.addEventListener('message', (event) => {
   }
 
   if (message[classElement].millisecondsTotal !== undefined) {
-    if (formatTimeVar !== message[classElement].formatTime && intervalId) {
+    if (formatTimeVar !== message[classElement].formatTimeCrono && intervalId) {
       clearInterval(intervalId)
       intervalId = null
     }
 
-    formatTimeVar = message[classElement].formatTime
+    formatTimeVar = message[classElement].formatTimeCrono
     updateTimeDisplay(formatTimeVar, message[classElement].millisecondsTotal)
 
     // Update the timer based on the received message

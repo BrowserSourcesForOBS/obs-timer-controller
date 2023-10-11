@@ -3,8 +3,13 @@ const resetButton = document.getElementById('resetButton')
 const timeText = document.getElementById('timeText')
 const addContainer = document.getElementById('buttonsaddtime')
 const subContainer = document.getElementById('buttonssubtime')
+const checkboxStopAdd = document.getElementById('checkboxStopAdd')
+const checkboxLabelStopAdd = document.getElementById('checkboxLabelStopAdd')
+const checkboxPauseAdd = document.getElementById('checkboxPauseAdd')
+const checkboxLabelPauseAdd = document.getElementById('checkboxLabelPauseAdd')
 const textMsg = document.getElementById('text-endmsg')
-const formatSelector = document.getElementById('formatSelector')
+const formatSelectorCrono = document.getElementById('formatSelectorCrono')
+const formatSelectorCdown = document.getElementById('formatSelectorCdown')
 const fontSelect = document.getElementById('fontSelect') // Font selector
 const fontSize = document.getElementById('fontSize')
 const boldButton = document.getElementById('boldButton')
@@ -84,28 +89,41 @@ socket.addEventListener('message', (event) => {
 
       controlButton.textContent = translateElements.timer.buttons.start
       resetButton.textContent = translateElements.timer.buttons.reset
+      checkboxLabelStopAdd.textContent = translateElements.timer.enableStopAdd
+      checkboxLabelPauseAdd.textContent = translateElements.timer.enablePauseAdd
 
       if (elementVariables && typeof elementVariables === 'object') {
         checkTextTime = MsToText(elementVariables.textMilliseconds)
         checkHexColor = elementVariables.colorText
 
         // Format selector options
-        formatSelector.innerHTML = ''
+        formatSelectorCrono.innerHTML = ''
         message.formats[classElement.replace(/\d/g, '')].forEach((format) => {
           const option = document.createElement('option')
           option.value = format
           option.textContent = format
-          formatSelector.appendChild(option)
+          formatSelectorCrono.appendChild(option)
+        })
+
+        formatSelectorCdown.innerHTML = ''
+        message.formats[classElement.replace(/\d/g, '')].forEach((format) => {
+          const option = document.createElement('option')
+          option.value = format
+          option.textContent = format
+          formatSelectorCdown.appendChild(option)
         })
 
         // Perform necessary actions with the variables here
         textMsg.textContent = elementVariables.msgEnd
         if (elementVariables.msgEnd === '') {
-          textMsg.textContent = translateElements.timer.ph_msgend
+          textMsg.textContent = translateElements.timer.phMsgEnd
           textMsg.style.color = '#555'
         } else { textMsg.style.color = '#000' }
         timeText.value = MsToText(elementVariables.textMilliseconds)
-        formatSelector.value = elementVariables.formatTime
+        // checkboxStopAdd.checked = elementVariables.enableStopAdd
+        // checkboxPauseAdd.checked = elementVariables.enablePauseAdd
+        formatSelectorCrono.value = elementVariables.formatTimeCrono
+        formatSelectorCdown.value = elementVariables.formatTimeCdown
         fontSelect.value = elementVariables.font
         fontSize.value = elementVariables.size
         textFormat(elementVariables)
@@ -122,11 +140,14 @@ socket.addEventListener('message', (event) => {
       if (message[classElement].status !== 'started') {
         textMsg.textContent = message[classElement].msgEnd
         if (message[classElement].msgEnd === '') {
-          textMsg.textContent = translateElements.timer.ph_msgend
+          textMsg.textContent = translateElements.timer.phMsgEnd
           textMsg.style.color = '#555'
         } else { textMsg.style.color = '#000' }
         timeText.value = MsToText(message[classElement].textMilliseconds)
-        formatSelector.value = message[classElement].formatTime
+        checkboxStopAdd.checked = message[classElement].enableStopAdd
+        checkboxPauseAdd.checked = message[classElement].enablePauseAdd
+        formatSelectorCrono.value = message[classElement].formatTimeCrono
+        formatSelectorCdown.value = message[classElement].formatTimeCdown
         fontSelect.value = message[classElement].font
         fontSize.value = message[classElement].size
         colorPicker.value = message[classElement].colorText
@@ -136,7 +157,8 @@ socket.addEventListener('message', (event) => {
       textFormat(message[classElement])
       // Update the control button and other elements based on the received message
       updateControlButton(message[classElement].status)
-      formatSelector.value = message[classElement].formatTime
+      formatSelectorCrono.value = message[classElement].formatTimeCrono
+      formatSelectorCdown.value = message[classElement].formatTimeCdown
     }
   } else {
     window.location.reload()
@@ -217,8 +239,16 @@ subContainer.addEventListener('click', (event) => {
   }
 })
 
+checkboxStopAdd.addEventListener('change', () => {
+  socket.send(JSON.stringify({ action: 'checkboxStopAdd', value: checkboxStopAdd.checked, classElement }))
+})
+
+checkboxPauseAdd.addEventListener('change', () => {
+  socket.send(JSON.stringify({ action: 'checkboxPauseAdd', value: checkboxPauseAdd.checked, classElement }))
+})
+
 textMsg.addEventListener('focus', () => {
-  if (textMsg.textContent === translateElements.timer.ph_msgend) {
+  if (textMsg.textContent === translateElements.timer.phMsgEnd) {
     textMsg.textContent = ''
     textMsg.style.color = '#000'
   }
@@ -227,13 +257,17 @@ textMsg.addEventListener('focus', () => {
 textMsg.addEventListener('blur', () => {
   socket.send(JSON.stringify({ action: 'editMsgExtensible', msg: textMsg.textContent, classElement }))
   if (textMsg.textContent === '') {
-    textMsg.textContent = translateElements.timer.ph_msgend
+    textMsg.textContent = translateElements.timer.phMsgEnd
     textMsg.style.color = '#555'
   } else { textMsg.style.color = '#000' }
 })
 
-formatSelector.addEventListener('change', () => {
-  socket.send(JSON.stringify({ action: 'changeFormat', format: formatSelector.value, classElement }))
+formatSelectorCrono.addEventListener('change', () => {
+  socket.send(JSON.stringify({ action: 'changeFormatExtCrono', format: formatSelectorCrono.value, classElement }))
+})
+
+formatSelectorCdown.addEventListener('change', () => {
+  socket.send(JSON.stringify({ action: 'changeFormatExtCdown', format: formatSelectorCdown.value, classElement }))
 })
 
 fontSelect.addEventListener('change', () => {

@@ -61,13 +61,34 @@
         <button id="subtime-5s" class="subtime-button">-5s</button>
         <button id="subtime-1s" class="subtime-button">-1s</button>
       </div>
+      <div class="space-between">
+        <input type="checkbox" id="checkboxStopAdd" class="checkboxBox" />
+        <label
+          for="checkboxStopAdd"
+          id="checkboxLabelStopAdd"
+          class="checkboxText"
+        ></label>
+      </div>
+      <div class="space-between">
+        <input type="checkbox" id="checkboxPauseAdd" class="checkboxBox" />
+        <label
+          for="checkboxPauseAdd"
+          id="checkboxLabelPauseAdd"
+          class="checkboxText"
+        ></label>
+      </div>
       <br />
       <div class="text-input-container">
         <div id="text-endmsg" class="paragraph" contenteditable="true"></div>
       </div>
       <br />
-      <div>
-        <select id="formatSelector"></select>
+      <div class="space-between">
+        <i id="icon-fa-clock" class="fas fa-clock"></i>
+        <select id="formatSelectorCrono"></select>
+      </div>
+      <div class="space-between">
+        <i id="icon-fa-stopwatch" class="fas fa-stopwatch"></i>
+        <select id="formatSelectorCdown"></select>
       </div>
       <br />
       <div>

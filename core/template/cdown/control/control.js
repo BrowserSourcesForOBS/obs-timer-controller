@@ -101,7 +101,7 @@ socket.addEventListener('message', (event) => {
         // Perform necessary actions with the variables here
         textMsg.textContent = elementVariables.msgEnd
         if (elementVariables.msgEnd === '') {
-          textMsg.textContent = translateElements.timer.ph_msgend
+          textMsg.textContent = translateElements.timer.phMsgEnd
           textMsg.style.color = '#555'
         } else { textMsg.style.color = '#000' }
         timeText.value = MsToText(elementVariables.textMilliseconds)
@@ -122,7 +122,7 @@ socket.addEventListener('message', (event) => {
       if (message[classElement].status !== 'started') {
         textMsg.textContent = message[classElement].msgEnd
         if (message[classElement].msgEnd === '') {
-          textMsg.textContent = translateElements.timer.ph_msgend
+          textMsg.textContent = translateElements.timer.phMsgEnd
           textMsg.style.color = '#555'
         } else { textMsg.style.color = '#000' }
         timeText.value = MsToText(message[classElement].textMilliseconds)
@@ -218,7 +218,7 @@ subContainer.addEventListener('click', (event) => {
 })
 
 textMsg.addEventListener('focus', () => {
-  if (textMsg.textContent === translateElements.timer.ph_msgend) {
+  if (textMsg.textContent === translateElements.timer.phMsgEnd) {
     textMsg.textContent = ''
     textMsg.style.color = '#000'
   }
@@ -227,7 +227,7 @@ textMsg.addEventListener('focus', () => {
 textMsg.addEventListener('blur', () => {
   socket.send(JSON.stringify({ action: 'editMsgCdown', msg: textMsg.textContent, classElement }))
   if (textMsg.textContent === '') {
-    textMsg.textContent = translateElements.timer.ph_msgend
+    textMsg.textContent = translateElements.timer.phMsgEnd
     textMsg.style.color = '#555'
   } else { textMsg.style.color = '#000' }
 })

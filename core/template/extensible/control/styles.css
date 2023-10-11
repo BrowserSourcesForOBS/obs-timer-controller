@@ -17,6 +17,13 @@ body {
   background-color: #555;
 }
 
+#icon-fa-clock,
+#icon-fa-stopwatch {
+  margin-right: 10px;
+  color: #000;
+  font-size: 30px;
+}
+
 .container {
   text-align: center;
   margin-top: 50px;
@@ -106,6 +113,19 @@ body {
   border: 2px solid #d9362eaa;
 }
 
+.checkboxBox {
+  background-color: #cccccc88;
+  border: 2px solid #cccccc88; /* Borde */
+  border-radius: 5px; /* Borde redondeado */
+  cursor: pointer;
+  width: 18px; /* Ancho personalizado */
+  height: 18px; /* Alto personalizado */
+}
+
+.checkboxText {
+  font-size: 18px; /* Tamaño de fuente */
+}
+
 .text-input-container {
   display: flex;
   justify-content: center; /* Centra horizontalmente */
@@ -126,7 +146,8 @@ body {
 }
 
 /* Estilos para el selector */
-#formatSelector,
+#formatSelectorCrono,
+#formatSelectorCdown,
 #fontSelect {
   background-color: #cccccc88;
   font-size: 24px; /* Tamaño de fuente */

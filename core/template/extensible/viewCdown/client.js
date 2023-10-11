@@ -33,12 +33,12 @@ socket.addEventListener('message', (event) => {
   }
 
   if (message[classElement].milliseconds !== undefined) {
-    if (formatTimeVar !== message[classElement].formatTime && intervalId) {
+    if (formatTimeVar !== message[classElement].formatTimeCdown && intervalId) {
       clearInterval(intervalId)
       intervalId = null
     }
 
-    formatTimeVar = message[classElement].formatTime
+    formatTimeVar = message[classElement].formatTimeCdown
     if (message[classElement].status === 'ended') {
       if (message[classElement].milliseconds !== 0) {
         updateTimeDisplay(formatTimeVar, message[classElement].milliseconds)
