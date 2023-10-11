@@ -7,7 +7,7 @@ const socket = new WebSocket('ws://localhost:3000')
 
 // Extract class element from URL
 const classElement = window.location.href.split('/')[3]
-titlePage.textContent = classElement + ' - View'
+titlePage.textContent = classElement + ' - View - Countdown'
 
 let intervalId = null
 let formatTimeVar
@@ -33,12 +33,12 @@ socket.addEventListener('message', (event) => {
   }
 
   if (message[classElement].milliseconds !== undefined) {
-    if (formatTimeVar !== message[classElement].formatTime && intervalId) {
+    if (formatTimeVar !== message[classElement].formatTimeCdown && intervalId) {
       clearInterval(intervalId)
       intervalId = null
     }
 
-    formatTimeVar = message[classElement].formatTime
+    formatTimeVar = message[classElement].formatTimeCdown
     if (message[classElement].status === 'ended') {
       if (message[classElement].milliseconds !== 0) {
         updateTimeDisplay(formatTimeVar, message[classElement].milliseconds)
@@ -83,7 +83,7 @@ socket.addEventListener('message', (event) => {
           if (message[classElement].startTime + message[classElement].milliseconds > Date.now()) {
             updateTimeDisplay(formatTimeVar, message[classElement].startTime + message[classElement].milliseconds - Date.now())
           } else {
-            socket.send(JSON.stringify({ action: 'stopCdown', classElement }))
+            socket.send(JSON.stringify({ action: 'stopExtensible', classElement }))
           }
         }, 1) // Update every 1 millisecond
       }

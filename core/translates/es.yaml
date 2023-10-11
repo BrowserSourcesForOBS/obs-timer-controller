@@ -4,12 +4,14 @@ home:
   cronoTitle: CRONÓMETROS
   cdownTitle: TEMPORIZADORES
   cdowntimeTitle: TIEMPO HASTA...
-  twitchextTitle: EXTENSIBLE TWITCH
+  extensibleTitle: STREAM EXTENSIBLE
   timeTitle: HORA ACTUAL
-  notycopycrono: URL copiada al portapapeles
+  notycopy: URL copiada al portapapeles
 timer:
   buttons:
     start: Iniciar
     pause: Pausar
     reset: Reiniciar
-  ph_msgend: Mensaje a mostrar cuando finalice el tiempo
+  phMsgEnd: Mensaje a mostrar cuando finalice el tiempo
+  enablePauseAdd: Habilitado el permiso para añadir tiempo cuando el tiempo está pausado
+  enableStopAdd: Habilitado el permiso para añadir tiempo cuando el tiempo aún no se ha iniciado

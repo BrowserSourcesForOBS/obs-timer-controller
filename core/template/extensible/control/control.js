@@ -1,10 +1,15 @@
-// Elements
-const timeData = document.getElementById('timeData')
-const timezoneSelector = document.getElementById('timezone')
+const controlButton = document.getElementById('controlButton')
+const resetButton = document.getElementById('resetButton')
+const timeText = document.getElementById('timeText')
 const addContainer = document.getElementById('buttonsaddtime')
 const subContainer = document.getElementById('buttonssubtime')
+const checkboxStopAdd = document.getElementById('checkboxStopAdd')
+const checkboxLabelStopAdd = document.getElementById('checkboxLabelStopAdd')
+const checkboxPauseAdd = document.getElementById('checkboxPauseAdd')
+const checkboxLabelPauseAdd = document.getElementById('checkboxLabelPauseAdd')
 const textMsg = document.getElementById('text-endmsg')
-const formatSelector = document.getElementById('formatSelector')
+const formatSelectorCrono = document.getElementById('formatSelectorCrono')
+const formatSelectorCdown = document.getElementById('formatSelectorCdown')
 const fontSelect = document.getElementById('fontSelect') // Font selector
 const fontSize = document.getElementById('fontSize')
 const boldButton = document.getElementById('boldButton')
@@ -18,19 +23,20 @@ const colorHex = document.getElementById('colorHex')
 const titlePage = document.getElementById('titlePage')
 const selectorLang = document.getElementById('language-selector')
 const switchTheme = document.getElementById('switch-theme')
-// const test = document.getElementById('test'); // Commented out unused variable
+// const test = document.getElementById('test');
 const socket = new WebSocket('ws://localhost:3000')
 
 const classElement = window.location.href.split('/')[3]
 titlePage.textContent = classElement + ' - Control'
 let translateElements
 
+let checkTextTime
 let checkHexColor
 
 socket.addEventListener('open', (event) => {
   console.log('WebSocket Connection Opened')
 
-  // Request the WebSocket server to send variable data
+  // Ask the WebSocket server to send variable data
   socket.send(JSON.stringify({ action: 'getVariables', classElement }))
 })
 
@@ -42,14 +48,14 @@ socket.addEventListener('message', (event) => {
   }
 
   if (message.fonts) {
-    // If the message contains the list of fonts
+    // If the message contains a list of fonts
     updateFontSelector(message.fonts)
   }
   if (fontSelect.innerHTML !== '') {
     // Call the function to get the maximum font size width
     const maxWidth = getMaxSizeWidth()
 
-    // Set the calculated width as the CSS style of the font size selector
+    // Set the calculated width as the CSS style for the font size selector
     fontSize.style.width = maxWidth
 
     if (message.action === 'sendVariables' && message.classElement === classElement) {
@@ -81,27 +87,30 @@ socket.addEventListener('message', (event) => {
         ? message.config.lang
         : 'en'
 
-      textMsg.innerHTML = 'Hola'
+      controlButton.textContent = translateElements.timer.buttons.start
+      resetButton.textContent = translateElements.timer.buttons.reset
+      checkboxLabelStopAdd.textContent = translateElements.timer.enableStopAdd
+      checkboxLabelPauseAdd.textContent = translateElements.timer.enablePauseAdd
 
       if (elementVariables && typeof elementVariables === 'object') {
+        checkTextTime = MsToText(elementVariables.textMilliseconds)
         checkHexColor = elementVariables.colorText
 
-        // console.log('Variables loaded from the server.')
-
-        timezoneSelector.innerHTML = ''
-        message.formats.timezones.forEach((format) => {
-          const option = document.createElement('option')
-          option.value = format
-          option.textContent = format
-          timezoneSelector.appendChild(option)
-        })
-
-        formatSelector.innerHTML = ''
+        // Format selector options
+        formatSelectorCrono.innerHTML = ''
         message.formats[classElement.replace(/\d/g, '')].forEach((format) => {
           const option = document.createElement('option')
           option.value = format
           option.textContent = format
-          formatSelector.appendChild(option)
+          formatSelectorCrono.appendChild(option)
+        })
+
+        formatSelectorCdown.innerHTML = ''
+        message.formats[classElement.replace(/\d/g, '')].forEach((format) => {
+          const option = document.createElement('option')
+          option.value = format
+          option.textContent = format
+          formatSelectorCdown.appendChild(option)
         })
 
         // Perform necessary actions with the variables here
@@ -110,23 +119,46 @@ socket.addEventListener('message', (event) => {
           textMsg.textContent = translateElements.timer.phMsgEnd
           textMsg.style.color = '#555'
         } else { textMsg.style.color = '#000' }
-        timeData.value = new Date(elementVariables.endDatetime).toLocaleString('en-CA', { timeZone: elementVariables.timezone, hour12: false }).replace(/,\s/, 'T')
-        timezoneSelector.value = elementVariables.timezone
-        formatSelector.value = elementVariables.formatTime
+        timeText.value = MsToText(elementVariables.textMilliseconds)
+        // checkboxStopAdd.checked = elementVariables.enableStopAdd
+        // checkboxPauseAdd.checked = elementVariables.enablePauseAdd
+        formatSelectorCrono.value = elementVariables.formatTimeCrono
+        formatSelectorCdown.value = elementVariables.formatTimeCdown
         fontSelect.value = elementVariables.font
         fontSize.value = elementVariables.size
         textFormat(elementVariables)
-        formatAlign(elementVariables.align) // Set the selected font
+        formatAlign(elementVariables.align)
         colorPicker.value = elementVariables.colorText
         colorHex.value = elementVariables.colorText
+        if (translateElements) {
+          updateControlButton(elementVariables.status)
+        }
       } else {
         console.log('The server did not return valid data.')
       }
     } else {
-      formatAlign(message[classElement].align) // Set the selected font
+      if (message[classElement].status !== 'started') {
+        textMsg.textContent = message[classElement].msgEnd
+        if (message[classElement].msgEnd === '') {
+          textMsg.textContent = translateElements.timer.phMsgEnd
+          textMsg.style.color = '#555'
+        } else { textMsg.style.color = '#000' }
+        timeText.value = MsToText(message[classElement].textMilliseconds)
+        checkboxStopAdd.checked = message[classElement].enableStopAdd
+        checkboxPauseAdd.checked = message[classElement].enablePauseAdd
+        formatSelectorCrono.value = message[classElement].formatTimeCrono
+        formatSelectorCdown.value = message[classElement].formatTimeCdown
+        fontSelect.value = message[classElement].font
+        fontSize.value = message[classElement].size
+        colorPicker.value = message[classElement].colorText
+        colorHex.value = message[classElement].colorText
+      }
+      formatAlign(message[classElement].align)
       textFormat(message[classElement])
       // Update the control button and other elements based on the received message
-      formatSelector.value = message[classElement].formatTime
+      updateControlButton(message[classElement].status)
+      formatSelectorCrono.value = message[classElement].formatTimeCrono
+      formatSelectorCdown.value = message[classElement].formatTimeCdown
     }
   } else {
     window.location.reload()
@@ -146,13 +178,32 @@ selectorLang.addEventListener('change', () => {
   socket.send(JSON.stringify({ action: 'langChange', lang: selectorLang.value }))
 })
 
-timeData.addEventListener('change', () => {
-  socket.send(JSON.stringify({ action: 'changeTimeCdownTime', time: new Date(timeData.value).getTime(), classElement }))
+controlButton.addEventListener('click', () => {
+  if (controlButton.textContent === translateElements.timer.buttons.start) {
+    socket.send(JSON.stringify({ action: 'startExtensible', classElement }))
+  } else {
+    socket.send(JSON.stringify({ action: 'pauseExtensible', classElement }))
+  }
 })
 
-timezoneSelector.addEventListener('change', () => {
-  socket.send(JSON.stringify({ action: 'changeTimezoneCdownTime', timezone: timezoneSelector.value, classElement }))
-  window.location.reload()
+resetButton.addEventListener('click', () => {
+  socket.send(JSON.stringify({ action: 'resetExtensible', classElement }))
+})
+
+timeText.addEventListener('change', () => {
+  const textTime = timeText.value.trim()
+
+  // Regular expression to check the correct time format
+  const timeRegex = /^(\d+):([0-5]?\d):([0-5]?\d)$/
+
+  if (timeRegex.test(textTime)) {
+    checkTextTime = textTime
+    // If the time format is valid, send the time to the server
+    socket.send(JSON.stringify({ action: 'changeTimeExtensible', time: TextToMs(checkTextTime), classElement }))
+    timeText.value = MsToText(TextToMs(checkTextTime))
+  } else {
+    timeText.value = checkTextTime
+  }
 })
 
 // Add an event listener to the main container
@@ -167,7 +218,7 @@ addContainer.addEventListener('click', (event) => {
     const data = button.id.split('-')
 
     if (button.id.startsWith('addtime-')) {
-      socket.send(JSON.stringify({ action: 'editTimeCdownTime', time: `+${data[1]}`, classElement }))
+      socket.send(JSON.stringify({ action: 'editTimeExtensible', time: `+${data[1]}`, classElement }))
     }
   }
 })
@@ -183,9 +234,17 @@ subContainer.addEventListener('click', (event) => {
     const data = button.id.split('-')
 
     if (button.id.startsWith('subtime-')) {
-      socket.send(JSON.stringify({ action: 'editTimeCdownTime', time: `-${data[1]}`, classElement }))
+      socket.send(JSON.stringify({ action: 'editTimeExtensible', time: `-${data[1]}`, classElement }))
     }
   }
+})
+
+checkboxStopAdd.addEventListener('change', () => {
+  socket.send(JSON.stringify({ action: 'checkboxStopAdd', value: checkboxStopAdd.checked, classElement }))
+})
+
+checkboxPauseAdd.addEventListener('change', () => {
+  socket.send(JSON.stringify({ action: 'checkboxPauseAdd', value: checkboxPauseAdd.checked, classElement }))
 })
 
 textMsg.addEventListener('focus', () => {
@@ -196,15 +255,19 @@ textMsg.addEventListener('focus', () => {
 })
 
 textMsg.addEventListener('blur', () => {
-  socket.send(JSON.stringify({ action: 'editMsgCdownTime', msg: textMsg.textContent, classElement }))
+  socket.send(JSON.stringify({ action: 'editMsgExtensible', msg: textMsg.textContent, classElement }))
   if (textMsg.textContent === '') {
     textMsg.textContent = translateElements.timer.phMsgEnd
     textMsg.style.color = '#555'
   } else { textMsg.style.color = '#000' }
 })
 
-formatSelector.addEventListener('change', () => {
-  socket.send(JSON.stringify({ action: 'changeFormat', format: formatSelector.value, classElement }))
+formatSelectorCrono.addEventListener('change', () => {
+  socket.send(JSON.stringify({ action: 'changeFormatExtCrono', format: formatSelectorCrono.value, classElement }))
+})
+
+formatSelectorCdown.addEventListener('change', () => {
+  socket.send(JSON.stringify({ action: 'changeFormatExtCdown', format: formatSelectorCdown.value, classElement }))
 })
 
 fontSelect.addEventListener('change', () => {
@@ -261,15 +324,15 @@ colorPicker.addEventListener('change', () => {
 })
 
 colorHex.addEventListener('change', () => {
-  const hexColor = colorHex.value.trim() // Remove whitespace around
+  const hexColor = colorHex.value.trim()
 
-  // Regular expression to check for correct hexadecimal code format
+  // Regular expression to check the correct hexadecimal color code format
   const hexRegex = /^#([0-9A-Fa-f]{6})$/
 
   if (hexRegex.test(hexColor)) {
     checkHexColor = hexColor.toUpperCase()
     // If the hexadecimal code is valid, send the color to the server
-    socket.send(JSON.stringify({ action: 'changeColor', color: checkHexColor, classElement }))
+    socket.send(JSON.stringify({ action: 'changeColorExtensible', color: checkHexColor, classElement }))
     colorPicker.value = checkHexColor
     colorHex.value = checkHexColor
   } else {
@@ -294,10 +357,32 @@ function updateFontSelector (fonts) {
   })
 }
 
+function updateControlButton (status) {
+  const maxWidth = getMaxButtonWidth()
+  controlButton.style.width = maxWidth
+
+  if (status === 'started') {
+    controlButton.textContent = translateElements.timer.buttons.pause
+  } else {
+    controlButton.textContent = translateElements.timer.buttons.start
+  }
+}
+
+function getMaxButtonWidth () {
+  const widths = []
+
+  Object.keys(translateElements.timer.buttons).forEach((value) => {
+    controlButton.textContent = translateElements.timer.buttons[value]
+    widths.push(parseFloat(window.getComputedStyle(controlButton).getPropertyValue('width')))
+  })
+  // Get the maximum of the two widths
+  return Math.max(...widths) + 'px'
+}
+
 function getMaxSizeWidth () {
   const maxvalue = fontSize.getAttribute('max') // Get the maximum value from the 'max' attribute
 
-  // Take the maximum of the two widths
+  // Get the maximum of the two widths
   return maxvalue.length * 20 + 'px'
 }
 
@@ -345,4 +430,27 @@ function textFormat (message) {
       btn.button.style.border = '2px solid #ccc'
     }
   })
+}
+
+function TextToMs (text) {
+  const timeComponents = text.split(':')
+
+  const hours = parseInt(timeComponents[0], 10)
+  const minutes = parseInt(timeComponents[1], 10)
+  const seconds = parseInt(timeComponents[2], 10)
+
+  return (hours * 3600 + minutes * 60 + seconds) * 1000
+}
+
+function MsToText (ms) {
+  const total = ms / 1000
+  const hours = Math.floor(total / 3600)
+  const minutes = Math.floor((total % 3600) / 60)
+  const seconds = total % 60
+
+  const formattedHours = String(hours).padStart(2, '0')
+  const formattedMinutes = String(minutes).padStart(2, '0')
+  const formattedSeconds = String(seconds).padStart(2, '0')
+
+  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`
 }

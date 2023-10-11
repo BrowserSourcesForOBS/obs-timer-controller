@@ -34,6 +34,17 @@ cdowntime:
   - 'MM:ss'
   - 'SS.000'
   - 'SS'
+extensible:
+  - 'HH:mm:ss.000'
+  - 'HH:mm:ss'
+  - '(HH:)(mm:)ss.000'
+  - '(HH:)(mm:)ss'
+  - '(HH:)mm:ss.000'
+  - '(HH:)mm:ss'
+  - 'MM:ss.000'
+  - 'MM:ss'
+  - 'SS.000'
+  - 'SS'
 time:
   - 'DD/MM/YYYY hh:mm:ss'
   - 'DD/MM/YYYY hh:mm'

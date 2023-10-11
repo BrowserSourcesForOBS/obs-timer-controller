@@ -3,6 +3,7 @@ const buttonContainer = document.getElementById('button-container')
 const buttonCronoContainer = document.getElementById('button-container-crono')
 const buttonCdownContainer = document.getElementById('button-container-cdown')
 const buttonCdowntimeContainer = document.getElementById('button-container-cdowntime')
+const buttonExtensibleContainer = document.getElementById('button-container-extensible')
 const buttonTimeContainer = document.getElementById('button-container-time')
 const buttonClose = document.getElementById('stop-code')
 const buttonWiki = document.getElementById('button-wiki')
@@ -11,7 +12,7 @@ const switchTheme = document.getElementById('switch-theme')
 const titleCrono = document.getElementById('crono-title')
 const titleCdown = document.getElementById('cdown-title')
 const titleCdowntime = document.getElementById('cdowntime-title')
-const titleTwitchExt = document.getElementById('twitchext-title')
+const titleExtensible = document.getElementById('extensible-title')
 const titleTime = document.getElementById('time-title')
 // const test = document.getElementById('test')
 const socket = new WebSocket('ws://localhost:3000')
@@ -63,7 +64,7 @@ socket.addEventListener('message', (event) => {
     titleCrono.textContent = translateElements.home.cronoTitle
     titleCdown.textContent = translateElements.home.cdownTitle
     titleCdowntime.textContent = translateElements.home.cdowntimeTitle
-    titleTwitchExt.textContent = translateElements.home.twitchextTitle
+    titleExtensible.textContent = translateElements.home.extensibleTitle
     titleTime.textContent = translateElements.home.timeTitle
 
     if (elementVariables && typeof elementVariables === 'object') {
@@ -120,6 +121,10 @@ buttonContainer.addEventListener('click', (event) => {
       window.open(`/${data[0]}/view`, '_blank', 'width=800,height=600')
     } else if (data[1] === 'controlButton') {
       window.open(`/${data[0]}/control`, '_blank', 'width=800,height=600')
+    } else if (data[1] === 'viewButtonCrono') {
+      window.open(`/${data[0]}/viewCrono`, '_blank', 'width=800,height=600')
+    } else if (data[1] === 'viewButtonCdown') {
+      window.open(`/${data[0]}/viewCdown`, '_blank', 'width=800,height=600')
     } else if (data[1] === 'copyButton') {
       // Get the text to copy from the "data-copy-text" attribute
       const copyText = `http://localhost:3000/${data[0]}/view`
@@ -128,7 +133,27 @@ buttonContainer.addEventListener('click', (event) => {
         copyTextToClipboard(copyText)
 
         // Display a notification message
-        showNotification(translateElements.home.notycopycrono, button)
+        showNotification(translateElements.home.notycopy, button)
+      }
+    } else if (data[1] === 'copyButtonCrono') {
+      // Get the text to copy from the "data-copy-text" attribute
+      const copyText = `http://localhost:3000/${data[0]}/viewCrono`
+
+      if (copyText) {
+        copyTextToClipboard(copyText)
+
+        // Display a notification message
+        showNotification(translateElements.home.notycopy, button)
+      }
+    } else if (data[1] === 'copyButtonCdown') {
+      // Get the text to copy from the "data-copy-text" attribute
+      const copyText = `http://localhost:3000/${data[0]}/viewCdown`
+
+      if (copyText) {
+        copyTextToClipboard(copyText)
+
+        // Display a notification message
+        showNotification(translateElements.home.notycopy, button)
       }
     } else if (data[1] === 'removeButton') {
       socket.send(JSON.stringify({ action: 'removeData', remove: data[0] }))
@@ -181,6 +206,46 @@ function loadButtons (list) {
       const controlButton = createIconButton('fas fa-gear')
       controlButton.id = element + '-controlButton'
       blockSpan.appendChild(controlButton)
+    } else if (element.startsWith('extensible')) {
+      const iconCrono = document.createElement('i')
+      iconCrono.className = 'fas fa-clock'
+      iconCrono.style.marginRight = '10px'
+      iconCrono.style.color = '#494949'
+      iconCrono.style.fontSize = '20px'
+      blockSpan.appendChild(iconCrono)
+
+      const viewButtonCrono = createIconButton('fas fa-eye')
+      viewButtonCrono.id = element + '-viewButtonCrono'
+      blockSpan.appendChild(viewButtonCrono)
+
+      const copyButtonCrono = createIconButton('fas fa-copy', 'OBS')
+      copyButtonCrono.className = 'button-copy'
+      copyButtonCrono.id = element + '-copyButtonCrono'
+      blockSpan.appendChild(copyButtonCrono)
+
+      blockSpan.appendChild(document.createElement('br'))
+
+      const iconCdown = document.createElement('i')
+      iconCdown.className = 'fas fa-stopwatch'
+      iconCdown.style.marginRight = '10px'
+      iconCdown.style.color = '#494949'
+      iconCdown.style.fontSize = '20px'
+      blockSpan.appendChild(iconCdown)
+
+      const viewButtonCdown = createIconButton('fas fa-eye')
+      viewButtonCdown.id = element + '-viewButtonCdown'
+      blockSpan.appendChild(viewButtonCdown)
+
+      const copyButtonCdown = createIconButton('fas fa-copy', 'OBS')
+      copyButtonCdown.className = 'button-copy'
+      copyButtonCdown.id = element + '-copyButtonCdown'
+      blockSpan.appendChild(copyButtonCdown)
+
+      blockSpan.appendChild(document.createElement('br'))
+
+      const controlButton = createIconButton('fas fa-gear')
+      controlButton.id = element + '-controlButton'
+      blockSpan.appendChild(controlButton)
     }
 
     const removeButton = createIconButton('fas fa-trash')
@@ -194,6 +259,8 @@ function loadButtons (list) {
       buttonCdowntimeContainer.insertBefore(blockSpan, buttonCdowntimeContainer.firstChild)
     } else if (element.startsWith('cdown')) {
       buttonCdownContainer.insertBefore(blockSpan, buttonCdownContainer.firstChild)
+    } else if (element.startsWith('extensible')) {
+      buttonExtensibleContainer.insertBefore(blockSpan, buttonExtensibleContainer.firstChild)
     } else if (element.startsWith('time')) {
       buttonTimeContainer.insertBefore(blockSpan, buttonTimeContainer.firstChild)
     }
