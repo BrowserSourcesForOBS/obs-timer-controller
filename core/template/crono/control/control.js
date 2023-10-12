@@ -140,7 +140,7 @@ languageSelector.addEventListener('change', () => {
 
 controlButton.addEventListener('click', () => {
   if (controlButton.textContent === translateElements.timer.buttons.start) {
-    socket.send(JSON.stringify({ action: 'startCrono', classElement }))
+    socket.send(JSON.stringify({ action: 'startTimer', classElement }))
   } else {
     socket.send(JSON.stringify({ action: 'pauseCrono', classElement }))
   }
@@ -162,7 +162,7 @@ addContainer.addEventListener('click', (event) => {
     const data = button.id.split('-')
 
     if (button.id.startsWith('addtime-')) {
-      socket.send(JSON.stringify({ action: 'editTimeCrono', time: `+${data[1]}`, classElement }))
+      socket.send(JSON.stringify({ action: 'editTime', time: `+${data[1]}`, classElement }))
     }
   }
 })
@@ -178,7 +178,7 @@ subContainer.addEventListener('click', (event) => {
     const data = button.id.split('-')
 
     if (button.id.startsWith('subtime-')) {
-      socket.send(JSON.stringify({ action: 'editTimeCrono', time: `-${data[1]}`, classElement }))
+      socket.send(JSON.stringify({ action: 'editTime', time: `-${data[1]}`, classElement }))
     }
   }
 })

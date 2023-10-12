@@ -151,7 +151,7 @@ timeData.addEventListener('change', () => {
 })
 
 timezoneSelector.addEventListener('change', () => {
-  socket.send(JSON.stringify({ action: 'changeTimezoneCdownTime', timezone: timezoneSelector.value, classElement }))
+  socket.send(JSON.stringify({ action: 'changeTimezoneTime', timezone: timezoneSelector.value, classElement }))
   window.location.reload()
 })
 
@@ -167,7 +167,7 @@ addContainer.addEventListener('click', (event) => {
     const data = button.id.split('-')
 
     if (button.id.startsWith('addtime-')) {
-      socket.send(JSON.stringify({ action: 'editTimeCdownTime', time: `+${data[1]}`, classElement }))
+      socket.send(JSON.stringify({ action: 'editTime', time: `+${data[1]}`, classElement }))
     }
   }
 })
@@ -183,7 +183,7 @@ subContainer.addEventListener('click', (event) => {
     const data = button.id.split('-')
 
     if (button.id.startsWith('subtime-')) {
-      socket.send(JSON.stringify({ action: 'editTimeCdownTime', time: `-${data[1]}`, classElement }))
+      socket.send(JSON.stringify({ action: 'editTime', time: `-${data[1]}`, classElement }))
     }
   }
 })
@@ -196,7 +196,7 @@ textMsg.addEventListener('focus', () => {
 })
 
 textMsg.addEventListener('blur', () => {
-  socket.send(JSON.stringify({ action: 'editMsgCdownTime', msg: textMsg.textContent, classElement }))
+  socket.send(JSON.stringify({ action: 'editMsg', msg: textMsg.textContent, classElement }))
   if (textMsg.textContent === '') {
     textMsg.textContent = translateElements.timer.phMsgEnd
     textMsg.style.color = '#555'

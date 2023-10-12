@@ -5,7 +5,7 @@ const buttonCdownContainer = document.getElementById('button-container-cdown')
 const buttonCdowntimeContainer = document.getElementById('button-container-cdowntime')
 const buttonExtensibleContainer = document.getElementById('button-container-extensible')
 const buttonTimeContainer = document.getElementById('button-container-time')
-const buttonClose = document.getElementById('stop-code')
+const buttonClose = document.getElementById('stopCode')
 const buttonWiki = document.getElementById('button-wiki')
 const leftButtons = document.getElementById('left-button')
 const textVersion = document.getElementById('span-version')
@@ -102,7 +102,7 @@ socket.addEventListener('close', (event) => {
 })
 
 window.addEventListener('unload', (event) => {
-  socket.send(JSON.stringify({ action: 'stop-code' }))
+  socket.send(JSON.stringify({ action: 'stopCode' }))
 })
 
 buttonClose.addEventListener('click', () => {
