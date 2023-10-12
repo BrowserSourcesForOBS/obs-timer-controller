@@ -1,6 +1,8 @@
 home:
   close: Close the window and stop the code
   wiki: Documentation
+  newVersionTitle: Download the new update
+  newVersion: "New update available: "
   cronoTitle: CHRONOMETERS
   cdownTitle: COUNTDOWNS
   cdowntimeTitle: TIME UNTIL...

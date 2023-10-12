@@ -5,6 +5,7 @@ const exec = util.promisify(require('child_process').exec)
 const WebSocket = require('ws')
 const { getMs } = require('util-tiempo')
 const fontkit = require('fontkit')
+const axios = require('axios')
 
 const argsv = process.argv.slice(2)
 
@@ -53,6 +54,41 @@ async function darkThemeCheck () {
   }
 }
 
+// Read the package.json file
+async function getVersion () {
+  try {
+    const data = await fs.promises.readFile((argsv[0] === 'test') ? './package.json' : './resources/app/package.json', 'utf8')
+
+    // Parse the content of the JSON file
+    const packageJson = await JSON.parse(data)
+    const packageVersion = `v${packageJson.version}`
+
+    // Extract the project version
+    console.log(`Project version: ${packageVersion}`)
+    return packageVersion
+  } catch (jsonError) {
+    console.error('Error parsing package.json:', jsonError)
+    return 'Error'
+  }
+}
+
+async function getVersionRelease () {
+  // Set the GitHub repository URL (make sure to replace 'owner' and 'repo' with your information)
+  const repoOwner = 'BrowserSourcesForOBS' // Replace 'owner' with the name of the repository owner
+  const repoName = 'obs-timer-controller' // Replace 'repo' with the name of the repository
+
+  // Make a request to the public releases page
+  try {
+    const response = await axios.get(`https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`)
+    const latestTag = response.data.tag_name
+    console.log(`Latest release tag on GitHub: ${latestTag}`)
+    return latestTag
+  } catch (error) {
+    console.error('Error getting latest release tag:', error)
+    return 'Error'
+  }
+}
+
 // Get a list of installed fonts
 exports.getFonts = () => {
   const fontDirectories = [
@@ -93,7 +129,9 @@ exports.getFonts = () => {
 exports.initConfig = async () => {
   const Config = {
     lang: await getLanguage(),
-    themedark: await darkThemeCheck()
+    themeDark: await darkThemeCheck(),
+    version: await getVersion(),
+    versionRelease: await getVersionRelease()
   }
 
   this.saveConfig(Config)
