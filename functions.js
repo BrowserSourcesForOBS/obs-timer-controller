@@ -128,8 +128,8 @@ exports.getFonts = () => {
 // Initialize configuration settings
 exports.initConfig = async () => {
   const Config = {
-    lang: await getLanguage(),
-    themeDark: await darkThemeCheck(),
+    lang: await getLanguage() || 'en',
+    themeDark: await darkThemeCheck() || false,
     version: await getVersion(),
     versionRelease: await getVersionRelease()
   }

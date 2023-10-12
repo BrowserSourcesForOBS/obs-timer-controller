@@ -66,271 +66,229 @@ let Config;
   saveConfig(Config)
 })()
 
+const actions = {
+  reloadPage: () => sendToAllClients({ action: 'reload' }),
+  themeChange: (ws, data) => {
+    Config.themeDark = data.themeDark
+    saveConfig(Config)
+    sendToAllClients({ action: 'reload' })
+  },
+  langChange: (ws, data) => {
+    Config.lang = data.lang
+    saveConfig(Config)
+    sendToAllClients({ action: 'reload' })
+  },
+  startTimer: (ws, data) => startTimer(wss, GlobalVariables, data.classElement),
+  pauseCrono: (ws, data) => pauseCrono(wss, GlobalVariables, data.classElement),
+  pauseCdown: (ws, data) => pauseCdown(wss, GlobalVariables, data.classElement),
+  pauseExtensible: (ws, data) => pauseExtensible(wss, GlobalVariables, data.classElement),
+  resetCrono: (ws, data) => resetCrono(wss, GlobalVariables, data.classElement),
+  resetCdown: (ws, data) => resetCdown(wss, GlobalVariables, data.classElement),
+  resetExtensible: (ws, data) => resetExtensible(wss, GlobalVariables, data.classElement),
+  stopCdown: (ws, data) => stopCdown(wss, GlobalVariables, data.classElement),
+  stopExtensible: (ws, data) => stopExtensible(wss, GlobalVariables, data.classElement),
+  changeTimeCdown: (ws, data) => handleChangeTimeCdown(data),
+  changeTimeCdownTime: (ws, data) => handleChangeTimeCdownTime(data),
+  changeTimeExtensible: (ws, data) => handleChangeTimeExtensible(data),
+  changeTimezoneTime: (ws, data) => handleChangeTimezoneTime(data),
+  editMsg: (ws, data) => editMsg(data),
+  checkboxStopAdd: (ws, data) => changeCheckboxStopAdd(data),
+  checkboxPauseAdd: (ws, data) => changeCheckboxPauseAdd(data),
+  changeFormat: (ws, data) => changeFormat(data),
+  changeFormatExtCrono: (ws, data) => changeFormatExtCrono(data),
+  changeFormatExtCdown: (ws, data) => changeFormatExtCdown(data),
+  editTime: (ws, data) => editTime(data),
+  changeFont: (ws, data) => changeFont(data),
+  changeSize: (ws, data) => changeSize(data),
+  textFormat: (ws, data) => changeTextFormat(data),
+  align: (ws, data) => changeAlign(data),
+  changeColor: (ws, data) => changeColor(data),
+  getVariables: (ws, data) => sendVariableData(ws, GlobalVariables, Config, data.classElement),
+  createData: (ws, data) => createData(data),
+  removeData: (ws, data) => removeData(data),
+  stopCode: () => process.exit()
+}
+
+function sendToAllClients (data) {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(data))
+    }
+  })
+}
+
+function handleChangeTimeCdown (data) {
+  GlobalVariables[data.classElement].textMilliseconds = data.time
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+  if (GlobalVariables[data.classElement].status === 'ended') {
+    resetCdown(wss, GlobalVariables, data.classElement)
+  }
+}
+
+function handleChangeTimeCdownTime (data) {
+  GlobalVariables[data.classElement].endDatetime = data.time
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+}
+
+function handleChangeTimeExtensible (data) {
+  GlobalVariables[data.classElement].textMilliseconds = data.time
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+  if (GlobalVariables[data.classElement].status === 'ended') {
+    resetExtensible(wss, GlobalVariables, data.classElement)
+  }
+}
+
+function handleChangeTimezoneTime (data) {
+  GlobalVariables[data.classElement].timezone = data.timezone
+  saveVariablesToYAML(GlobalVariables)
+  sendToAllClients({ action: 'reload' })
+}
+
+function editMsg (data) {
+  GlobalVariables[data.classElement].msgEnd = data.msg
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+}
+
+function changeCheckboxStopAdd (data) {
+  GlobalVariables[data.classElement].enableStopAdd = data.value
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+}
+
+function changeCheckboxPauseAdd (data) {
+  GlobalVariables[data.classElement].enablePauseAdd = data.value
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+}
+
+function changeFormat (data) {
+  const classElement = data.classElement
+  GlobalVariables[classElement].formatTime = data.format
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+}
+
+function changeFormatExtCrono (data) {
+  const classElement = data.classElement
+  GlobalVariables[classElement].formatTimeCrono = data.format
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+}
+
+function changeFormatExtCdown (data) {
+  const classElement = data.classElement
+  GlobalVariables[classElement].formatTimeCdown = data.format
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+}
+
+function editTime (data) {
+  const classElement = data.classElement
+  const status = GlobalVariables[classElement].status
+  const enablePauseAdd = GlobalVariables[classElement].enablePauseAdd
+  const enableStopAdd = GlobalVariables[classElement].enableStopAdd
+
+  if (
+    classElement.startsWith('crono') ||
+    (classElement.startsWith('cdown') && !classElement.startsWith('cdowntime') && status !== 'ended') ||
+    (classElement.startsWith('extensible') && (
+      status === 'started' ||
+      (status === 'paused' && enablePauseAdd) ||
+      (status === 'stopped' && enableStopAdd)
+    ))
+  ) {
+    editTimeTimer(wss, GlobalVariables, data.time, classElement)
+  } else if (classElement.startsWith('cdowntime')) {
+    editTimeCdowntime(wss, GlobalVariables, data.time, classElement)
+  }
+}
+
+function changeFont (data) {
+  GlobalVariables[data.classElement].font = data.font
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+}
+
+function changeSize (data) {
+  GlobalVariables[data.classElement].size = data.size
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+}
+
+function changeTextFormat (data) {
+  const classElement = data.classElement
+  switch (data.format) {
+    case 'bold':
+      GlobalVariables[classElement].bold = !GlobalVariables[classElement].bold
+      break
+    case 'italic':
+      GlobalVariables[classElement].italic = !GlobalVariables[classElement].italic
+      break
+    case 'underline':
+      GlobalVariables[classElement].underline = !GlobalVariables[classElement].underline
+      break
+  }
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+}
+
+function changeAlign (data) {
+  GlobalVariables[data.classElement].align = data.align
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+}
+
+function changeColor (data) {
+  GlobalVariables[data.classElement].colorText = data.color
+  sendToAllClients(GlobalVariables)
+  saveVariablesToYAML(GlobalVariables)
+}
+
+function createData (data) {
+  const page = createDataYAML(GlobalVariables, data.classType)
+  fs.copy(
+    argsv[0] === 'test' ? `./core/template/${data.classType}` : `./resources/app/core/template/${data.classType}`,
+    argsv[0] === 'test' ? `./core/${page}` : `./resources/app/core/${page}`
+  )
+    .then(() => {
+      console.log('Folder copied successfully.')
+    })
+    .catch((err) => {
+      console.error('Error copying the folder:', err)
+    })
+}
+
+function removeData (data) {
+  delete GlobalVariables[data.remove]
+  fs.remove(argsv[0] === 'test' ? `./core/${data.remove}` : `./resources/app/core/${data.remove}`)
+    .then(() => {
+      // console.log(`Folder deleted successfully: ${folderToDelete}`);
+    })
+    .catch((error) => {
+      console.error(`Error deleting the folder: ${error}`)
+    })
+  saveVariablesToYAML(GlobalVariables)
+}
+
 // WebSocket connections handling
 wss.on('connection', (ws) => {
-  // Send the list of fonts to the client upon connection
   ws.send(JSON.stringify({ fonts: fontOptions }))
 
   ws.on('message', (message) => {
     const data = JSON.parse(message)
 
-    GlobalVariables = loadDataFromYAML((argsv[0] === 'test') ? './core/db.yaml' : './resources/app/core/db.yaml')
+    GlobalVariables = loadDataFromYAML(argsv[0] === 'test' ? './core/db.yaml' : './resources/app/core/db.yaml')
 
-    if (data.action === 'reloadPage') {
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify({ action: 'reload' }))
-        }
-      })
-    } else if (data.action === 'themeChange') {
-      Config.themeDark = data.themeDark
-      saveConfig(Config)
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify({ action: 'reload' }))
-        }
-      })
-    } else if (data.action === 'langChange') {
-      Config.lang = data.lang
-      saveConfig(Config)
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify({ action: 'reload' }))
-        }
-      })
-    } else if (data.action === 'startCrono' || data.action === 'startCdown' || data.action === 'startExtensible') {
-      // Start the timer when receiving the "start" action
-      startTimer(wss, GlobalVariables, data.classElement)
-    } else if (data.action === 'pauseCrono') {
-      // Pause the timer when receiving the "pause" action
-      pauseCrono(wss, GlobalVariables, data.classElement)
-    } else if (data.action === 'pauseCdown') {
-      // Pause the countdown when receiving the "pause" action
-      pauseCdown(wss, GlobalVariables, data.classElement)
-    } else if (data.action === 'pauseExtensible') {
-      // Pause the countdown when receiving the "pause" action
-      pauseExtensible(wss, GlobalVariables, data.classElement)
-    } else if (data.action === 'resetCrono') {
-      // Reset the timer when receiving the "reset" action
-      resetCrono(wss, GlobalVariables, data.classElement)
-    } else if (data.action === 'resetCdown') {
-      // Reset the countdown when receiving the "reset" action
-      resetCdown(wss, GlobalVariables, data.classElement)
-    } else if (data.action === 'resetExtensible') {
-      // Reset the countdown when receiving the "reset" action
-      resetExtensible(wss, GlobalVariables, data.classElement)
-    } else if (data.action === 'stopCdown') {
-      // Stop the countdown when receiving the "stop" action
-      stopCdown(wss, GlobalVariables, data.classElement)
-    } else if (data.action === 'stopExtensible') {
-      // Stop the countdown when receiving the "stop" action
-      stopExtensible(wss, GlobalVariables, data.classElement)
-    } else if (data.action === 'changeTimeCdown' && data.time) {
-      // Change the time format when receiving the "changeFormat" action
-      GlobalVariables[data.classElement].textMilliseconds = data.time
-      // Transmit the updated format to all WebSocket clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(GlobalVariables))
-        }
-      })
-      saveVariablesToYAML(GlobalVariables)
-      if (GlobalVariables[data.classElement].status === 'ended') {
-        resetCdown(wss, GlobalVariables, data.classElement)
-      }
-    } else if (data.action === 'changeTimeCdownTime' && data.time) {
-      // Change the end time format when receiving the "changeFormat" action
-      GlobalVariables[data.classElement].endDatetime = data.time
-      // Transmit the updated format to all WebSocket clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(GlobalVariables))
-        }
-      })
-      saveVariablesToYAML(GlobalVariables)
-    } else if (data.action === 'changeTimeExtensible' && data.time) {
-      // Change the time format when receiving the "changeFormat" action
-      GlobalVariables[data.classElement].textMilliseconds = data.time
-      // Transmit the updated format to all WebSocket clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(GlobalVariables))
-        }
-      })
-      saveVariablesToYAML(GlobalVariables)
-      if (GlobalVariables[data.classElement].status === 'ended') {
-        resetExtensible(wss, GlobalVariables, data.classElement)
-      }
-    } else if (
-      data.action === 'changeTimezoneCdownTime' ||
-      data.action === 'changeTimezoneTime'
-    ) {
-      // Change the time format when receiving the "changeFormat" action
-      GlobalVariables[data.classElement].timezone = data.timezone
-      // Transmit the updated format to all WebSocket clients
-      saveVariablesToYAML(GlobalVariables)
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify({ action: 'reload' }))
-        }
-      })
-    } else if (data.action === 'editMsgCdown' ||
-    data.action === 'editMsgCdownTime' ||
-    data.action === 'editMsgExtensible') {
-      GlobalVariables[data.classElement].msgEnd = data.msg
-      // Transmit the updated format to all WebSocket clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(GlobalVariables))
-        }
-      })
-      saveVariablesToYAML(GlobalVariables)
-    } else if (data.action === 'checkboxStopAdd') {
-      // Change the text format when receiving the "changeFormat"
-      GlobalVariables[data.classElement].enableStopAdd = data.value
-      // Transmit the updated format to all WebSocket clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(GlobalVariables))
-        }
-      })
-      saveVariablesToYAML(GlobalVariables)
-    } else if (data.action === 'checkboxPauseAdd') {
-      // Change the text format when receiving the "changeFormat"
-      GlobalVariables[data.classElement].enablePauseAdd = data.value
-      // Transmit the updated format to all WebSocket clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(GlobalVariables))
-        }
-      })
-      saveVariablesToYAML(GlobalVariables)
-    } else if ((data.action === 'changeFormat' ||
-    data.action === 'changeFormatExtCrono' ||
-    data.action === 'changeFormatExtCdown'
-    ) && data.format) {
-      const classElement = data.classElement
-      if (data.action === 'changeFormatExtCrono') {
-        GlobalVariables[classElement].formatTimeCrono = data.format
-      } else if (data.action === 'changeFormatExtCdown') {
-        GlobalVariables[classElement].formatTimeCdown = data.format
-      } else {
-        GlobalVariables[classElement].formatTime = data.format
-      }
-
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(GlobalVariables))
-        }
-      })
-
-      saveVariablesToYAML(GlobalVariables)
-    } else if (
-      data.action === 'editTimeCrono' ||
-    (data.action === 'editTimeCdown' && GlobalVariables[data.classElement].status === 'ended')
-    ) {
-      editTimeTimer(wss, GlobalVariables, data.time, data.classElement)
-    } else if (data.action === 'editTimeCdownTime') {
-      editTimeCdowntime(wss, GlobalVariables, data.time, data.classElement)
-    } else if (data.action === 'editTimeExtensible' && (
-      GlobalVariables[data.classElement].status === 'started' ||
-      (GlobalVariables[data.classElement].status === 'paused' && GlobalVariables[data.classElement].enablePauseAdd) ||
-      (GlobalVariables[data.classElement].status === 'stopped' && GlobalVariables[data.classElement].enableStopAdd))
-    ) {
-      editTimeTimer(wss, GlobalVariables, data.time, data.classElement)
-    } else if (data.action === 'changeFont' && data.font) {
-      // Change the font format when receiving the "changeFormatr"
-      GlobalVariables[data.classElement].font = data.font
-
-      // Transmit the updated format to all WebSocket clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(GlobalVariables))
-        }
-      })
-      saveVariablesToYAML(GlobalVariables)
-    } else if (data.action === 'changeSize' && data.size) {
-      // Change the font size when receiving the "changeFormat"
-      GlobalVariables[data.classElement].size = data.size
-
-      // Transmit the updated format to all WebSocket clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(GlobalVariables))
-        }
-      })
-      saveVariablesToYAML(GlobalVariables)
-    } else if (data.action === 'textFormat') {
-      // Change the text format when receiving the "changeFormat"
-      switch (data.format) {
-        case 'bold':
-          GlobalVariables[data.classElement].bold = !GlobalVariables[data.classElement].bold
-          break
-        case 'italic':
-          GlobalVariables[data.classElement].italic = !GlobalVariables[data.classElement].italic
-          break
-        case 'underline':
-          GlobalVariables[data.classElement].underline = !GlobalVariables[data.classElement].underline
-          break
-      }
-      // Transmit the updated format to all WebSocket clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(GlobalVariables))
-        }
-      })
-      saveVariablesToYAML(GlobalVariables)
-    } else if (data.action === 'align') {
-      // Change the text alignment when receiving the "changeFormat"
-      GlobalVariables[data.classElement].align = data.align
-
-      // Transmit the updated alignment to all WebSocket clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(GlobalVariables))
-        }
-      })
-      saveVariablesToYAML(GlobalVariables)
-    } else if (data.action === 'changeColor') {
-      // Change the text color when receiving the "changeFormat"
-      GlobalVariables[data.classElement].colorText = data.color
-
-      // Transmit the updated color to all WebSocket clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(GlobalVariables))
-        }
-      })
-      saveVariablesToYAML(GlobalVariables)
-    } else if (data.action === 'getVariables' && data.classElement) {
-      GlobalVariables = loadDataFromYAML((argsv[0] === 'test') ? './core/db.yaml' : './resources/app/core/db.yaml')
-      // The client requests variable data
-      sendVariableData(ws, GlobalVariables, Config, data.classElement)
-    } else if (data.action === 'createData' && data.classType) {
-      const page = createDataYAML(GlobalVariables, data.classType)
-      fs.copy((argsv[0] === 'test') ? `./core/template/${data.classType}` : `./resources/app/core/template/${data.classType}`, (argsv[0] === 'test') ? `./core/${page}` : `./resources/app/core/${page}`)
-        .then(() => {
-          console.log('Folder copied successfully.')
-        })
-        .catch((err) => {
-          console.error('Error copying the folder:', err)
-        })
-    } else if (data.action === 'removeData' && data.remove) {
-      delete GlobalVariables[data.remove]
-      fs.remove((argsv[0] === 'test') ? `./core/${data.remove}` : `./resources/app/core/${data.remove}`)
-        .then(() => {
-          // console.log(`Folder deleted successfully: ${folderToDelete}`);
-        })
-        .catch((error) => {
-          console.error(`Error deleting the folder: ${error}`)
-        })
-      saveVariablesToYAML(GlobalVariables)
-    } else if (data.action === 'stop-code') {
-      // Stop the Node.js server
-      process.exit()
+    if (actions[data.action]) {
+      actions[data.action](ws, data)
     }
+
+    ws.send(JSON.stringify(GlobalVariables))
   })
-  ws.send(JSON.stringify(GlobalVariables))
 })
 
 // Configure static routes for HTML files
@@ -429,11 +387,20 @@ app.get('/:classElement/control&:request', (req, res) => {
 
 // Other server configuration (port, etc.)
 
+function openUrlWhenConfigExists () {
+  if (Config) {
+    open.open(`http://localhost:${PORT}`)
+  } else {
+    // Config todavía no existe, espera y vuelve a verificar en un momento
+    setTimeout(openUrlWhenConfigExists, 1000) // Espera 1 segundo antes de verificar nuevamente
+  }
+}
+
 // Start the server on port 3000
 const PORT = process.env.PORT || 3000
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
 
   // Open the default browser at 'http://localhost:3000' after starting the server using 'open'.
-  open.open(`http://localhost:${PORT}`)
+  openUrlWhenConfigExists()
 })

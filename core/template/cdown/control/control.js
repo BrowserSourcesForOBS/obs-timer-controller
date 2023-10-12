@@ -158,7 +158,7 @@ selectorLang.addEventListener('change', () => {
 
 controlButton.addEventListener('click', () => {
   if (controlButton.textContent === translateElements.timer.buttons.start) {
-    socket.send(JSON.stringify({ action: 'startCdown', classElement }))
+    socket.send(JSON.stringify({ action: 'startTimer', classElement }))
   } else {
     socket.send(JSON.stringify({ action: 'pauseCdown', classElement }))
   }
@@ -196,7 +196,7 @@ addContainer.addEventListener('click', (event) => {
     const data = button.id.split('-')
 
     if (button.id.startsWith('addtime-')) {
-      socket.send(JSON.stringify({ action: 'editTimeCdown', time: `+${data[1]}`, classElement }))
+      socket.send(JSON.stringify({ action: 'editTime', time: `+${data[1]}`, classElement }))
     }
   }
 })
@@ -212,7 +212,7 @@ subContainer.addEventListener('click', (event) => {
     const data = button.id.split('-')
 
     if (button.id.startsWith('subtime-')) {
-      socket.send(JSON.stringify({ action: 'editTimeCdown', time: `-${data[1]}`, classElement }))
+      socket.send(JSON.stringify({ action: 'editTime', time: `-${data[1]}`, classElement }))
     }
   }
 })
@@ -225,7 +225,7 @@ textMsg.addEventListener('focus', () => {
 })
 
 textMsg.addEventListener('blur', () => {
-  socket.send(JSON.stringify({ action: 'editMsgCdown', msg: textMsg.textContent, classElement }))
+  socket.send(JSON.stringify({ action: 'editMsg', msg: textMsg.textContent, classElement }))
   if (textMsg.textContent === '') {
     textMsg.textContent = translateElements.timer.phMsgEnd
     textMsg.style.color = '#555'
