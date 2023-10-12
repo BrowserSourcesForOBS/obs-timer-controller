@@ -83,7 +83,7 @@ wss.on('connection', (ws) => {
         }
       })
     } else if (data.action === 'themeChange') {
-      Config.themedark = data.themedark
+      Config.themeDark = data.themeDark
       saveConfig(Config)
       wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {

@@ -59,8 +59,8 @@ socket.addEventListener('message', (event) => {
       translateElements = message.translateElements
 
       // Config and translates
-      switchTheme.checked = message.config.themedark
-      if (message.config.themedark) {
+      switchTheme.checked = message.config.themeDark
+      if (message.config.themeDark) {
         document.body.classList.remove('light-theme')
         document.body.classList.add('dark-theme')
       } else {
@@ -149,7 +149,7 @@ socket.addEventListener('close', (event) => {
 })
 
 switchTheme.addEventListener('change', () => {
-  socket.send(JSON.stringify({ action: 'themeChange', themedark: switchTheme.checked }))
+  socket.send(JSON.stringify({ action: 'themeChange', themeDark: switchTheme.checked }))
 })
 
 selectorLang.addEventListener('change', () => {

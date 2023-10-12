@@ -1,6 +1,8 @@
 home:
   close: Cierra la ventana y detiene el código
   wiki: Documentación
+  newVersionTitle: Descarga la nueva actualización
+  newVersion: "Nueva actualización disponible: "
   cronoTitle: CRONÓMETROS
   cdownTitle: TEMPORIZADORES
   cdowntimeTitle: TIEMPO HASTA...

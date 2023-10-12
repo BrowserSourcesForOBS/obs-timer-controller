@@ -7,6 +7,8 @@ const buttonExtensibleContainer = document.getElementById('button-container-exte
 const buttonTimeContainer = document.getElementById('button-container-time')
 const buttonClose = document.getElementById('stop-code')
 const buttonWiki = document.getElementById('button-wiki')
+const leftButtons = document.getElementById('left-button')
+const textVersion = document.getElementById('span-version')
 const languageSelector = document.getElementById('language-selector')
 const switchTheme = document.getElementById('switch-theme')
 const titleCrono = document.getElementById('crono-title')
@@ -36,10 +38,23 @@ socket.addEventListener('message', (event) => {
     translateElements = message.translateElements
 
     // Configuration and translation
-    switchTheme.checked = message.config.themedark
+    switchTheme.checked = message.config.themeDark
     buttonClose.title = translateElements.home.close
+    textVersion.textContent = message.config.version
+    if (message.config.version !== 'Error' && message.config.versionRelease !== 'Error' && compareVersions(message.config.version, message.config.versionRelease) === 1) {
+      const link = document.createElement('a')
+      link.href = 'https://github.com/BrowserSourcesForOBS/obs-timer-controller/releases/latest'
+      link.target = '_blank'
+      link.id = 'link-newVersion'
+      const button = document.createElement('button')
+      button.className = 'button-versionRelease'
+      button.title = translateElements.home.newVersionTitle
+      button.textContent = translateElements.home.newVersion + message.config.versionRelease
+      link.appendChild(button)
+      leftButtons.appendChild(link)
+    }
     buttonWiki.title = translateElements.home.wiki
-    if (message.config.themedark) {
+    if (message.config.themeDark) {
       document.body.classList.remove('light-theme')
       document.body.classList.add('dark-theme')
     } else {
@@ -96,7 +111,7 @@ buttonClose.addEventListener('click', () => {
 })
 
 switchTheme.addEventListener('change', () => {
-  socket.send(JSON.stringify({ action: 'themeChange', themedark: switchTheme.checked }))
+  socket.send(JSON.stringify({ action: 'themeChange', themeDark: switchTheme.checked }))
 })
 
 languageSelector.addEventListener('change', () => {
@@ -290,4 +305,16 @@ function showNotification (message, button) {
     // Remove the notification after 2 seconds (adjust the time to your preference)
     notification.remove()
   }, 2000)
+}
+
+function compareVersions (versionA, versionB) {
+  const a = versionA.split('v')[1].split('.').map(Number)
+  const b = versionB.split('v')[1].split('.').map(Number)
+
+  for (let i = 0; i < 3; i++) {
+    if (a[i] < b[i]) return 1 // B es más moderna que A
+    if (a[i] > b[i]) return -1 // B es más antigua que A
+  }
+
+  return 0 // Son la misma versión
 }
