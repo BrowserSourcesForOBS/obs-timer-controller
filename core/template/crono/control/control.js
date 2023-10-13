@@ -139,7 +139,7 @@ languageSelector.addEventListener('change', () => {
 })
 
 controlButton.addEventListener('click', () => {
-  if (controlButton.textContent === translateElements.timer.buttons.start || 'n/a') {
+  if (controlButton.textContent === translateElements.timer.buttons.start) {
     socket.send(JSON.stringify({ action: 'startTimer', classElement }))
   } else {
     socket.send(JSON.stringify({ action: 'pauseCrono', classElement }))

@@ -107,7 +107,7 @@ socket.addEventListener('message', (event) => {
         // Perform necessary actions with the variables here
         textMsg.textContent = elementVariables.msgEnd
         if (elementVariables.msgEnd === '') {
-          textMsg.textContent = translateElements.timer.phMsgEnd  || 'n/a'
+          textMsg.textContent = translateElements.timer.phMsgEnd || 'n/a'
           textMsg.style.color = '#555'
         } else { textMsg.style.color = '#000' }
         timeData.value = new Date(elementVariables.endDatetime).toLocaleString('en-CA', { timeZone: elementVariables.timezone, hour12: false }).replace(/,\s/, 'T')
@@ -189,7 +189,7 @@ subContainer.addEventListener('click', (event) => {
 })
 
 textMsg.addEventListener('focus', () => {
-  if (textMsg.textContent === translateElements.timer.phMsgEnd || 'n/a') {
+  if (textMsg.textContent === translateElements.timer.phMsgEnd) {
     textMsg.textContent = ''
     textMsg.style.color = '#000'
   }
