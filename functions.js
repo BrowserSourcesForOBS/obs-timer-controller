@@ -57,7 +57,11 @@ async function darkThemeCheck () {
 // Read the package.json file
 async function getVersion () {
   try {
-    const data = await fs.promises.readFile((argsv[0] === 'test') ? './package.json' : './resources/app/package.json', 'utf8')
+    // Determines the folder name based on the operating system
+    const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
+
+    // Build the path to the package.json file
+    const data = await fs.promises.readFile((argsv[0] === 'test') ? './package.json' : `./${appFolder}/app/package.json`, 'utf8')
 
     // Parse the content of the JSON file
     const packageJson = await JSON.parse(data)
@@ -143,8 +147,11 @@ exports.loadConfig = async () => {
   let Config
 
   try {
+    // Determines the folder name based on the operating system
+    const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
+
     // Read the YAML file (if it exists)
-    const yamlFile = fs.readFileSync((argsv[0] === 'test') ? './core/config.yaml' : './resources/app/core/config.yaml', 'utf8')
+    const yamlFile = fs.readFileSync((argsv[0] === 'test') ? './core/config.yaml' : `./${appFolder}/app/core/config.yaml`, 'utf8')
 
     // Convert the YAML file content to a JavaScript object
     const data = yaml.load(yamlFile)
@@ -169,8 +176,11 @@ exports.saveConfig = (config) => {
     // Convert the configuration object to YAML format
     const configYAML = yaml.dump(config)
 
+    // Determines the folder name based on the operating system
+    const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
+
     // Write the content to the YAML file
-    fs.writeFileSync((argsv[0] === 'test') ? './core/config.yaml' : './resources/app/core/config.yaml', configYAML, 'utf8')
+    fs.writeFileSync((argsv[0] === 'test') ? './core/config.yaml' : `./${appFolder}/app/core/config.yaml`, configYAML, 'utf8')
 
     // console.log('Variables saved to YAML file.');
   } catch (error) {
@@ -207,8 +217,11 @@ exports.saveVariablesToYAML = (GlobalVariables) => {
     // Convert global variables to YAML format
     const variablesYAML = yaml.dump(GlobalVariables)
 
+    // Determines the folder name based on the operating system
+    const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
+
     // Write the content to the YAML file
-    fs.writeFileSync((argsv[0] === 'test') ? './core/db.yaml' : './resources/app/core/db.yaml', variablesYAML, 'utf8')
+    fs.writeFileSync((argsv[0] === 'test') ? './core/db.yaml' : `./${appFolder}/app/core/db.yaml`, variablesYAML, 'utf8')
 
     // console.log('Variables saved to YAML file.');
   } catch (error) {
@@ -320,8 +333,12 @@ exports.createDataYAML = (GlobalVariables, classType) => {
 // Send variable data to a WebSocket client
 exports.sendVariableData = (client, GlobalVariables, configuration, classE) => {
   if (GlobalVariables && typeof GlobalVariables === 'object') {
-    const formats = this.loadDataFromYAML((argsv[0] === 'test') ? './core/formats.yaml' : './resources/app/core/formats.yaml')
-    const translates = this.loadDataFromYAML((argsv[0] === 'test') ? `./core/translates/${configuration.lang}.yaml` : `./resources/app/core/translates/${configuration.lang}.yaml`)
+    // Determines the folder name based on the operating system
+    const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
+
+    // Build the path to the package.json file
+    const formats = this.loadDataFromYAML((argsv[0] === 'test') ? './core/formats.yaml' : `./${appFolder}/app/core/formats.yaml`)
+    const translates = this.loadDataFromYAML((argsv[0] === 'test') ? `./core/translates/${configuration.lang}.yaml` : `./${appFolder}/app/core/translates/${configuration.lang}.yaml`)
 
     // Send variable data to the client
     if (classE === 'home') {
