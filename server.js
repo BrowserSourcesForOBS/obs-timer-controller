@@ -50,7 +50,7 @@ const fontOptions = getFonts()
 let GlobalVariables
 
 // Determines the folder name based on the operating system
-const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
 
 // Build the path to the package.json file
 GlobalVariables = loadDataFromYAML((argsv[0] === 'test') ? './core/db.yaml' : `./${appFolder}/app/core/db.yaml`)
@@ -256,8 +256,8 @@ function changeColor (data) {
 function createData (data) {
   const page = createDataYAML(GlobalVariables, data.classType)
 
-    // Determines the folder name based on the operating system
-    const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+  // Determines the folder name based on the operating system
+  const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
 
   fs.copy(
     // Build the path to the package.json file
@@ -276,7 +276,7 @@ function removeData (data) {
   delete GlobalVariables[data.remove]
 
   // Determines the folder name based on the operating system
-  const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+  const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
 
   // Build the path to the package.json file
   fs.remove(argsv[0] === 'test' ? `./core/${data.remove}` : `./${appFolder}/app/core/${data.remove}`)
@@ -297,7 +297,7 @@ wss.on('connection', (ws) => {
     const data = JSON.parse(message)
 
     // Determines the folder name based on the operating system
-    const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+    const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
 
     // Build the path to the package.json file
     GlobalVariables = loadDataFromYAML(argsv[0] === 'test' ? './core/db.yaml' : `./${appFolder}/app/core/db.yaml`)

@@ -58,7 +58,7 @@ async function darkThemeCheck () {
 async function getVersion () {
   try {
     // Determines the folder name based on the operating system
-    const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+    const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
 
     // Build the path to the package.json file
     const data = await fs.promises.readFile((argsv[0] === 'test') ? './package.json' : `./${appFolder}/app/package.json`, 'utf8')
@@ -148,7 +148,7 @@ exports.loadConfig = async () => {
 
   try {
     // Determines the folder name based on the operating system
-    const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+    const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
 
     // Read the YAML file (if it exists)
     const yamlFile = fs.readFileSync((argsv[0] === 'test') ? './core/config.yaml' : `./${appFolder}/app/core/config.yaml`, 'utf8')
@@ -177,7 +177,7 @@ exports.saveConfig = (config) => {
     const configYAML = yaml.dump(config)
 
     // Determines the folder name based on the operating system
-    const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+    const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
 
     // Write the content to the YAML file
     fs.writeFileSync((argsv[0] === 'test') ? './core/config.yaml' : `./${appFolder}/app/core/config.yaml`, configYAML, 'utf8')
@@ -218,7 +218,7 @@ exports.saveVariablesToYAML = (GlobalVariables) => {
     const variablesYAML = yaml.dump(GlobalVariables)
 
     // Determines the folder name based on the operating system
-    const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+    const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
 
     // Write the content to the YAML file
     fs.writeFileSync((argsv[0] === 'test') ? './core/db.yaml' : `./${appFolder}/app/core/db.yaml`, variablesYAML, 'utf8')
@@ -333,9 +333,8 @@ exports.createDataYAML = (GlobalVariables, classType) => {
 // Send variable data to a WebSocket client
 exports.sendVariableData = (client, GlobalVariables, configuration, classE) => {
   if (GlobalVariables && typeof GlobalVariables === 'object') {
-
     // Determines the folder name based on the operating system
-    const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+    const appFolder = process.platform === 'darwin' ? 'Resources' : 'resources'
 
     // Build the path to the package.json file
     const formats = this.loadDataFromYAML((argsv[0] === 'test') ? './core/formats.yaml' : `./${appFolder}/app/core/formats.yaml`)
