@@ -80,8 +80,8 @@ socket.addEventListener('message', (event) => {
         ? message.config.lang
         : 'en'
 
-      controlButton.textContent = translateElements.timer.buttons.start
-      resetButton.textContent = translateElements.timer.buttons.reset
+      controlButton.textContent = translateElements.timer.buttons.start || 'n/a'
+      resetButton.textContent = translateElements.timer.buttons.reset || 'n/a'
 
       if (elementVariables && typeof elementVariables === 'object') {
         checkHexColor = elementVariables.colorText
@@ -139,7 +139,7 @@ languageSelector.addEventListener('change', () => {
 })
 
 controlButton.addEventListener('click', () => {
-  if (controlButton.textContent === translateElements.timer.buttons.start) {
+  if (controlButton.textContent === translateElements.timer.buttons.start || 'n/a') {
     socket.send(JSON.stringify({ action: 'startTimer', classElement }))
   } else {
     socket.send(JSON.stringify({ action: 'pauseCrono', classElement }))
@@ -265,9 +265,9 @@ function updateControlButton (status) {
   controlButton.style.width = maxWidth
 
   if (status === 'started') {
-    controlButton.textContent = translateElements.timer.buttons.pause
+    controlButton.textContent = translateElements.timer.buttons.pause || 'n/a'
   } else {
-    controlButton.textContent = translateElements.timer.buttons.start
+    controlButton.textContent = translateElements.timer.buttons.start || 'n/a'
   }
 }
 
@@ -275,7 +275,7 @@ function getMaxButtonWidth () {
   const widths = []
 
   Object.keys(translateElements.timer.buttons).forEach((value) => {
-    controlButton.textContent = translateElements.timer.buttons[value]
+    controlButton.textContent = translateElements.timer.buttons[value] || 'n/a'
     widths.push(parseFloat(window.getComputedStyle(controlButton).getPropertyValue('width')))
   })
 
