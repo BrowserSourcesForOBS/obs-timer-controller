@@ -48,7 +48,12 @@ const fontOptions = getFonts()
 
 // Load variables from the YAML file at server startup
 let GlobalVariables
-GlobalVariables = loadDataFromYAML((argsv[0] === 'test') ? './core/db.yaml' : './resources/app/core/db.yaml')
+
+// Determines the folder name based on the operating system
+const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+
+// Build the path to the package.json file
+GlobalVariables = loadDataFromYAML((argsv[0] === 'test') ? './core/db.yaml' : `./${appFolder}/app/core/db.yaml`)
 try {
   Object.keys(GlobalVariables).forEach((key) => {
     if (GlobalVariables[key].status === 'started') {
@@ -250,9 +255,14 @@ function changeColor (data) {
 
 function createData (data) {
   const page = createDataYAML(GlobalVariables, data.classType)
+
+    // Determines the folder name based on the operating system
+    const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+
   fs.copy(
-    argsv[0] === 'test' ? `./core/template/${data.classType}` : `./resources/app/core/template/${data.classType}`,
-    argsv[0] === 'test' ? `./core/${page}` : `./resources/app/core/${page}`
+    // Build the path to the package.json file
+    argsv[0] === 'test' ? `./core/template/${data.classType}` : `./${appFolder}/app/core/template/${data.classType}`,
+    argsv[0] === 'test' ? `./core/${page}` : `./${appFolder}/app/core/${page}`
   )
     .then(() => {
       console.log('Folder copied successfully.')
@@ -264,7 +274,12 @@ function createData (data) {
 
 function removeData (data) {
   delete GlobalVariables[data.remove]
-  fs.remove(argsv[0] === 'test' ? `./core/${data.remove}` : `./resources/app/core/${data.remove}`)
+
+  // Determines the folder name based on the operating system
+  const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+
+  // Build the path to the package.json file
+  fs.remove(argsv[0] === 'test' ? `./core/${data.remove}` : `./${appFolder}/app/core/${data.remove}`)
     .then(() => {
       // console.log(`Folder deleted successfully: ${folderToDelete}`);
     })
@@ -281,7 +296,11 @@ wss.on('connection', (ws) => {
   ws.on('message', (message) => {
     const data = JSON.parse(message)
 
-    GlobalVariables = loadDataFromYAML(argsv[0] === 'test' ? './core/db.yaml' : './resources/app/core/db.yaml')
+    // Determines the folder name based on the operating system
+    const appFolder = process.platform === 'darwin' ? 'Resources': 'resources';
+
+    // Build the path to the package.json file
+    GlobalVariables = loadDataFromYAML(argsv[0] === 'test' ? './core/db.yaml' : `./${appFolder}/app/core/db.yaml`)
 
     if (actions[data.action]) {
       actions[data.action](ws, data)
@@ -309,7 +328,7 @@ app.get('/:classElement/control', (req, res) => {
 app.get('/:classElement/control&:request', (req, res) => {
   const classElement = req.params.classElement
   const request = req.params.request
-  GlobalVariables = loadDataFromYAML((argsv[0] === 'test') ? './core/db.yaml' : './resources/app/core/db.yaml')
+  GlobalVariables = loadDataFromYAML((argsv[0] === 'test') ? './core/db.yaml' : `./${appFolder}/app/core/db.yaml`)
 
   // Here you can check the value of 'request' and perform the corresponding action
   if (request === 'start' && !classElement.startsWith('cdowntime') && !classElement.startsWith('time')) {
