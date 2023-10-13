@@ -26,7 +26,7 @@
     "pkg-win": "electron-packager . OBS-Timer-Controller --platform=win32 --arch=x64 --app-version=1.0.5 --out=dist --overwrite --icon=icon.ico --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
     "pkg-linux": "electron-packager . OBS-Timer-Controller --platform=linux --arch=x64 --app-version=1.0.5 --out=dist --overwrite --icon=icon.ico --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
     "pkg-mac": "electron-packager . OBS-Timer-Controller --platform=darwin --arch=x64 --app-version=1.0.5 --out=dist --overwrite --icon=icon.icns --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
-    "pkg-all": "npm run pkg-win && npm run pkg-linux && npm pkg-mac"
+    "pkg-all": "npm run pkg-win && npm run pkg-linux && npm run pkg-mac"
   },
   "author": "XtoManuel",
   "license": "ISC",
