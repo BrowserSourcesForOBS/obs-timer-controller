@@ -39,7 +39,7 @@ socket.addEventListener('message', (event) => {
 
     // Configuration and translation
     switchTheme.checked = message.config.themeDark
-    buttonClose.title = translateElements.home.close
+    buttonClose.title = translateElements.home.close || 'n/a'
     textVersion.textContent = message.config.version
     if (message.config.version !== 'Error' && message.config.versionRelease !== 'Error' && compareVersions(message.config.version, message.config.versionRelease) === 1) {
       const link = document.createElement('a')
@@ -48,12 +48,12 @@ socket.addEventListener('message', (event) => {
       link.id = 'link-newVersion'
       const button = document.createElement('button')
       button.className = 'button-versionRelease'
-      button.title = translateElements.home.newVersionTitle
-      button.textContent = translateElements.home.newVersion + message.config.versionRelease
+      button.title = translateElements.home.newVersionTitle || 'n/a'
+      button.textContent = (translateElements.home.newVersion || 'n/a') + (message.config.versionRelease || 'n/a')
       link.appendChild(button)
       leftButtons.appendChild(link)
     }
-    buttonWiki.title = translateElements.home.wiki
+    buttonWiki.title = translateElements.home.wiki || 'n/a'
     if (message.config.themeDark) {
       document.body.classList.remove('light-theme')
       document.body.classList.add('dark-theme')
@@ -76,11 +76,11 @@ socket.addEventListener('message', (event) => {
       ? message.config.lang
       : 'en'
 
-    titleCrono.textContent = translateElements.home.cronoTitle
-    titleCdown.textContent = translateElements.home.cdownTitle
-    titleCdowntime.textContent = translateElements.home.cdowntimeTitle
-    titleExtensible.textContent = translateElements.home.extensibleTitle
-    titleTime.textContent = translateElements.home.timeTitle
+    titleCrono.textContent = translateElements.home.cronoTitle || 'n/a'
+    titleCdown.textContent = translateElements.home.cdownTitle || 'n/a'
+    titleCdowntime.textContent = translateElements.home.cdowntimeTitle || 'n/a'
+    titleExtensible.textContent = translateElements.home.extensibleTitle || 'n/a'
+    titleTime.textContent = translateElements.home.timeTitle || 'n/a'
 
     if (elementVariables && typeof elementVariables === 'object') {
       // console.log('Variables loaded from the server.')
@@ -148,7 +148,7 @@ buttonContainer.addEventListener('click', (event) => {
         copyTextToClipboard(copyText)
 
         // Display a notification message
-        showNotification(translateElements.home.notycopy, button)
+        showNotification(translateElements.home.notycopy || 'n/a', button)
       }
     } else if (data[1] === 'copyButtonCrono') {
       // Get the text to copy from the "data-copy-text" attribute
@@ -158,7 +158,7 @@ buttonContainer.addEventListener('click', (event) => {
         copyTextToClipboard(copyText)
 
         // Display a notification message
-        showNotification(translateElements.home.notycopy, button)
+        showNotification(translateElements.home.notycopy || 'n/a', button)
       }
     } else if (data[1] === 'copyButtonCdown') {
       // Get the text to copy from the "data-copy-text" attribute
@@ -168,7 +168,7 @@ buttonContainer.addEventListener('click', (event) => {
         copyTextToClipboard(copyText)
 
         // Display a notification message
-        showNotification(translateElements.home.notycopy, button)
+        showNotification(translateElements.home.notycopy || 'n/a', button)
       }
     } else if (data[1] === 'removeButton') {
       socket.send(JSON.stringify({ action: 'removeData', remove: data[0] }))

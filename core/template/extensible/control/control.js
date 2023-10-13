@@ -87,10 +87,10 @@ socket.addEventListener('message', (event) => {
         ? message.config.lang
         : 'en'
 
-      controlButton.textContent = translateElements.timer.buttons.start
-      resetButton.textContent = translateElements.timer.buttons.reset
-      checkboxLabelStopAdd.textContent = translateElements.timer.enableStopAdd
-      checkboxLabelPauseAdd.textContent = translateElements.timer.enablePauseAdd
+      controlButton.textContent = translateElements.timer.buttons.start || 'n/a'
+      resetButton.textContent = translateElements.timer.buttons.reset || 'n/a'
+      checkboxLabelStopAdd.textContent = translateElements.timer.enableStopAdd || 'n/a'
+      checkboxLabelPauseAdd.textContent = translateElements.timer.enablePauseAdd || 'n/a'
 
       if (elementVariables && typeof elementVariables === 'object') {
         checkTextTime = MsToText(elementVariables.textMilliseconds)
@@ -116,7 +116,7 @@ socket.addEventListener('message', (event) => {
         // Perform necessary actions with the variables here
         textMsg.textContent = elementVariables.msgEnd
         if (elementVariables.msgEnd === '') {
-          textMsg.textContent = translateElements.timer.phMsgEnd
+          textMsg.textContent = translateElements.timer.phMsgEnd || 'n/a'
           textMsg.style.color = '#555'
         } else { textMsg.style.color = '#000' }
         timeText.value = MsToText(elementVariables.textMilliseconds)
@@ -140,7 +140,7 @@ socket.addEventListener('message', (event) => {
       if (message[classElement].status !== 'started') {
         textMsg.textContent = message[classElement].msgEnd
         if (message[classElement].msgEnd === '') {
-          textMsg.textContent = translateElements.timer.phMsgEnd
+          textMsg.textContent = translateElements.timer.phMsgEnd || 'n/a'
           textMsg.style.color = '#555'
         } else { textMsg.style.color = '#000' }
         timeText.value = MsToText(message[classElement].textMilliseconds)
@@ -179,7 +179,7 @@ selectorLang.addEventListener('change', () => {
 })
 
 controlButton.addEventListener('click', () => {
-  if (controlButton.textContent === translateElements.timer.buttons.start) {
+  if (controlButton.textContent === translateElements.timer.buttons.start || 'n/a') {
     socket.send(JSON.stringify({ action: 'startTimer', classElement }))
   } else {
     socket.send(JSON.stringify({ action: 'pauseExtensible', classElement }))
@@ -248,7 +248,7 @@ checkboxPauseAdd.addEventListener('change', () => {
 })
 
 textMsg.addEventListener('focus', () => {
-  if (textMsg.textContent === translateElements.timer.phMsgEnd) {
+  if (textMsg.textContent === translateElements.timer.phMsgEnd || 'n/a') {
     textMsg.textContent = ''
     textMsg.style.color = '#000'
   }
@@ -257,7 +257,7 @@ textMsg.addEventListener('focus', () => {
 textMsg.addEventListener('blur', () => {
   socket.send(JSON.stringify({ action: 'editMsg', msg: textMsg.textContent, classElement }))
   if (textMsg.textContent === '') {
-    textMsg.textContent = translateElements.timer.phMsgEnd
+    textMsg.textContent = translateElements.timer.phMsgEnd || 'n/a'
     textMsg.style.color = '#555'
   } else { textMsg.style.color = '#000' }
 })
@@ -362,9 +362,9 @@ function updateControlButton (status) {
   controlButton.style.width = maxWidth
 
   if (status === 'started') {
-    controlButton.textContent = translateElements.timer.buttons.pause
+    controlButton.textContent = translateElements.timer.buttons.pause || 'n/a'
   } else {
-    controlButton.textContent = translateElements.timer.buttons.start
+    controlButton.textContent = translateElements.timer.buttons.start || 'n/a'
   }
 }
 
@@ -372,7 +372,7 @@ function getMaxButtonWidth () {
   const widths = []
 
   Object.keys(translateElements.timer.buttons).forEach((value) => {
-    controlButton.textContent = translateElements.timer.buttons[value]
+    controlButton.textContent = translateElements.timer.buttons[value]  || 'n/a'
     widths.push(parseFloat(window.getComputedStyle(controlButton).getPropertyValue('width')))
   })
   // Get the maximum of the two widths
