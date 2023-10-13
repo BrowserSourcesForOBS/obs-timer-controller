@@ -179,7 +179,7 @@ selectorLang.addEventListener('change', () => {
 })
 
 controlButton.addEventListener('click', () => {
-  if (controlButton.textContent === translateElements.timer.buttons.start || 'n/a') {
+  if (controlButton.textContent === translateElements.timer.buttons.start) {
     socket.send(JSON.stringify({ action: 'startTimer', classElement }))
   } else {
     socket.send(JSON.stringify({ action: 'pauseExtensible', classElement }))
@@ -248,7 +248,7 @@ checkboxPauseAdd.addEventListener('change', () => {
 })
 
 textMsg.addEventListener('focus', () => {
-  if (textMsg.textContent === translateElements.timer.phMsgEnd || 'n/a') {
+  if (textMsg.textContent === translateElements.timer.phMsgEnd) {
     textMsg.textContent = ''
     textMsg.style.color = '#000'
   }
@@ -372,7 +372,7 @@ function getMaxButtonWidth () {
   const widths = []
 
   Object.keys(translateElements.timer.buttons).forEach((value) => {
-    controlButton.textContent = translateElements.timer.buttons[value]  || 'n/a'
+    controlButton.textContent = translateElements.timer.buttons[value] || 'n/a'
     widths.push(parseFloat(window.getComputedStyle(controlButton).getPropertyValue('width')))
   })
   // Get the maximum of the two widths
