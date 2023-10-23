@@ -1,6 +1,6 @@
 {
   "name": "obs-timer-controller",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Handling browser sources for OBS related to timers and countdowns.",
   "main": "server.js",
   "repository": {
@@ -23,15 +23,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "node": "node . test",
-    "pkg-win": "electron-packager . OBS-Timer-Controller --platform=win32 --arch=x64 --app-version=1.0.5 --out=dist --overwrite --icon=icon.ico --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
-    "pkg-linux": "electron-packager . OBS-Timer-Controller --platform=linux --arch=x64 --app-version=1.0.5 --out=dist --overwrite --icon=icon.ico --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
-    "pkg-mac": "electron-packager . OBS-Timer-Controller --platform=darwin --arch=x64 --app-version=1.0.5 --out=dist --overwrite --icon=icon.icns --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
+    "pkg-win": "electron-packager . OBS-Timer-Controller --platform=win32 --arch=x64 --app-version=1.0.6 --out=dist --overwrite --icon=icon.ico --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
+    "pkg-linux": "electron-packager . OBS-Timer-Controller --platform=linux --arch=x64 --app-version=1.0.6 --out=dist --overwrite --icon=icon.ico --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
+    "pkg-mac": "electron-packager . OBS-Timer-Controller --platform=darwin --arch=x64 --app-version=1.0.6 --out=dist --overwrite --icon=icon.icns --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
     "pkg-all": "npm run pkg-win && npm run pkg-linux"
   },
   "author": "XtoManuel",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^27.0.0",
+    "electron": "^27.0.2",
     "electron-packager": "^17.1.2"
   }
 }
