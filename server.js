@@ -4,6 +4,9 @@ const WebSocket = require('ws')
 const path = require('path')
 const fs = require('fs-extra')
 const open = require('openurl')
+const { exec } = require('child_process')
+
+require('dotenv').config() // Load environment variables from .env
 
 const argsv = process.argv.slice(2)
 
@@ -111,7 +114,7 @@ const actions = {
   getVariables: (ws, data) => sendVariableData(ws, GlobalVariables, Config, data.classElement),
   createData: (ws, data) => createData(data),
   removeData: (ws, data) => removeData(data),
-  stopCode: () => process.exit()
+  stopCode: () => stopCode()
 }
 
 function sendToAllClients (data) {
@@ -289,6 +292,11 @@ function removeData (data) {
   saveVariablesToYAML(GlobalVariables)
 }
 
+function stopCode () {
+  console.log('The code has stopped successfully')
+  process.exit()
+}
+
 // WebSocket connections handling
 wss.on('connection', (ws) => {
   ws.send(JSON.stringify({ fonts: fontOptions }))
@@ -408,10 +416,35 @@ app.get('/:classElement/control&:request', (req, res) => {
 
 function openUrlWhenConfigExists () {
   if (Config) {
-    open.open(`http://localhost:${PORT}`)
+    const customBrowser = process.env.BROWSER // Get the value of the BROWSER environment variable
+
+    if (customBrowser) {
+      try {
+      // If the BROWSER environment variable is defined, try to open that browser
+        const url = `http://localhost:${PORT}`
+        switch (process.platform) {
+          case 'darwin': // macOS
+            exec(`open -a "${customBrowser}" ${url}`)
+            break
+          case 'win32': // Windows
+            exec(`start ${customBrowser} ${url}`)
+            break
+          case 'linux': // Linux
+            exec(`${customBrowser} ${url}`)
+            break
+          default:
+            console.error('Unsupported operating system.')
+        }
+      } catch {
+        open.open(`http://localhost:${PORT}`)
+      }
+    } else {
+      // If the BROWSER environment variable is not defined, open the default browser
+      open.open(`http://localhost:${PORT}`)
+    }
   } else {
-    // Config todavía no existe, espera y vuelve a verificar en un momento
-    setTimeout(openUrlWhenConfigExists, 1000) // Espera 1 segundo antes de verificar nuevamente
+    // Configuration doesn't exist yet, wait and check again in a moment
+    setTimeout(openUrlWhenConfigExists, 1000) // Wait for 1 second before checking again
   }
 }
 

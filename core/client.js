@@ -106,6 +106,7 @@ window.addEventListener('unload', (event) => {
 })
 
 buttonClose.addEventListener('click', () => {
+  socket.send(JSON.stringify({ action: 'stopCode' }))
   // Closes the current window or tab
   window.close()
 })
