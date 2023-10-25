@@ -448,11 +448,11 @@ function openUrlWhenConfigExists () {
   }
 }
 
-// Start the server on port 3000
-const PORT = process.env.PORT || 3000
+// Start the server
+const PORT = process.env.PORT || 5001
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
 
-  // Open the default browser at 'http://localhost:3000' after starting the server using 'open'.
+  // Open the default browser at 'http://localhost:5001' after starting the server using 'open'.
   openUrlWhenConfigExists()
 })

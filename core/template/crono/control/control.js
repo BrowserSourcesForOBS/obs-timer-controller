@@ -17,7 +17,7 @@ const titlePage = document.getElementById('titlePage')
 const languageSelector = document.getElementById('language-selector')
 const switchTheme = document.getElementById('switch-theme')
 // const test = document.getElementById('test')
-const socket = new WebSocket('ws://localhost:3000')
+const socket = new WebSocket(`ws://localhost:${window.location.port}`)
 
 const classElement = window.location.href.split('/')[3]
 titlePage.textContent = classElement + ' - Control'

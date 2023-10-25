@@ -3,7 +3,7 @@ const timeElement = document.getElementById('time')
 const containers = document.querySelectorAll('.container')
 const titlePage = document.getElementById('titlePage')
 // const test = document.getElementById('test'); // Commented out unused variable
-const socket = new WebSocket('ws://localhost:3000')
+const socket = new WebSocket(`ws://localhost:${window.location.port}`)
 
 // Extract class element from URL
 const classElement = window.location.href.split('/')[3]
