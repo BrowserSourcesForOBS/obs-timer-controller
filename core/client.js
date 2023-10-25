@@ -17,7 +17,7 @@ const titleCdowntime = document.getElementById('cdowntime-title')
 const titleExtensible = document.getElementById('extensible-title')
 const titleTime = document.getElementById('time-title')
 // const test = document.getElementById('test')
-const socket = new WebSocket('ws://localhost:3000')
+const socket = new WebSocket(`ws://localhost:${window.location.port}`)
 
 let translateElements
 
@@ -143,7 +143,7 @@ buttonContainer.addEventListener('click', (event) => {
       window.open(`/${data[0]}/viewCdown`, '_blank', 'width=800,height=600')
     } else if (data[1] === 'copyButton') {
       // Get the text to copy from the "data-copy-text" attribute
-      const copyText = `http://localhost:3000/${data[0]}/view`
+      const copyText = `http://localhost:${window.location.port}/${data[0]}/view`
 
       if (copyText) {
         copyTextToClipboard(copyText)
@@ -153,7 +153,7 @@ buttonContainer.addEventListener('click', (event) => {
       }
     } else if (data[1] === 'copyButtonCrono') {
       // Get the text to copy from the "data-copy-text" attribute
-      const copyText = `http://localhost:3000/${data[0]}/viewCrono`
+      const copyText = `http://localhost:${window.location.port}/${data[0]}/viewCrono`
 
       if (copyText) {
         copyTextToClipboard(copyText)
@@ -163,7 +163,7 @@ buttonContainer.addEventListener('click', (event) => {
       }
     } else if (data[1] === 'copyButtonCdown') {
       // Get the text to copy from the "data-copy-text" attribute
-      const copyText = `http://localhost:3000/${data[0]}/viewCdown`
+      const copyText = `http://localhost:${window.location.port}/${data[0]}/viewCdown`
 
       if (copyText) {
         copyTextToClipboard(copyText)
