@@ -147,12 +147,12 @@ selectorLang.addEventListener('change', () => {
 })
 
 timeData.addEventListener('change', () => {
+  test.textContent = `${timeData.value} [ ${new Date(timeData.value).getTime()} ]`
   socket.send(JSON.stringify({ action: 'changeTimeCdownTime', time: new Date(timeData.value).getTime(), classElement }))
 })
 
 timezoneSelector.addEventListener('change', () => {
   socket.send(JSON.stringify({ action: 'changeTimezoneTime', timezone: timezoneSelector.value, classElement }))
-  window.location.reload()
 })
 
 // Add an event listener to the main container

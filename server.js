@@ -98,7 +98,10 @@ const actions = {
   changeTimeCdown: (ws, data) => handleChangeTimeCdown(data),
   changeTimeCdownTime: (ws, data) => handleChangeTimeCdownTime(data),
   changeTimeExtensible: (ws, data) => handleChangeTimeExtensible(data),
-  changeTimezoneTime: (ws, data) => handleChangeTimezoneTime(data),
+  changeTimezoneTime: (ws, data) => {
+    handleChangeTimezoneTime(data)
+    sendToAllClients({ action: 'reload' })
+  },
   editMsg: (ws, data) => editMsg(data),
   checkboxStopAdd: (ws, data) => changeCheckboxStopAdd(data),
   checkboxPauseAdd: (ws, data) => changeCheckboxPauseAdd(data),
@@ -114,7 +117,10 @@ const actions = {
   getVariables: (ws, data) => sendVariableData(ws, GlobalVariables, Config, data.classElement),
   createData: (ws, data) => createData(data),
   removeData: (ws, data) => removeData(data),
-  stopCode: () => stopCode()
+  stopCode: () => {
+    console.log('The code has stopped successfully')
+    process.exit()
+  }
 }
 
 function sendToAllClients (data) {
@@ -290,11 +296,6 @@ function removeData (data) {
       console.error(`Error deleting the folder: ${error}`)
     })
   saveVariablesToYAML(GlobalVariables)
-}
-
-function stopCode () {
-  console.log('The code has stopped successfully')
-  process.exit()
 }
 
 // WebSocket connections handling
