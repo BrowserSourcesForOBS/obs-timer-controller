@@ -147,7 +147,6 @@ selectorLang.addEventListener('change', () => {
 })
 
 timeData.addEventListener('change', () => {
-  test.textContent = `${timeData.value} [ ${new Date(timeData.value).getTime()} ]`
   socket.send(JSON.stringify({ action: 'changeTimeCdownTime', time: new Date(timeData.value).getTime(), classElement }))
 })
 
