@@ -1,0 +1,196 @@
+.navigation-bar {
+    background-color: #e5e5e5;
+    display: flex;
+    justify-content: right;
+    align-items: right;
+    padding: 10px 30px;
+
+    &-button {
+        &-left {
+            margin-right: auto;
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 5px;
+        }
+
+        &-close {
+            width: 30px;
+            height: 30px;
+            background-color: #f44336;
+            border: 2px solid #f44336;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            &-icon {
+                color: white;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                &__image {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+
+            &:hover {
+                background-color: #d9362e;
+                border: 2px solid #d9362e;
+            }
+        }
+        &-link {
+            width: 30px;
+            height: 30px;
+            background-color: #000;
+            border: 2px solid #000;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            &-icon {
+                color: white;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                &__image {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+
+            &:hover {
+                background-color: #444; /* Fondo gris más oscuro al pasar el ratón */
+                border: 2px solid #444;
+            }
+        }
+    }
+}
+
+// .span-version {
+//     font-size: 18px;
+//     background-color: #007bff;
+//     border: 2px solid #007bff;
+//     border-radius: 5px;
+//     color: white;
+//     position: relative;
+//     top: -1.5px;
+//     flex-grow: 1;
+//     margin-right: 2.5px;
+//     margin-left: 2.5px;
+//     padding: 0px 10px;
+// }
+
+// .button-versionRelease {
+//     font-size: 16.5px;
+//     background-color: #4caf50;
+//     border: 2px solid #4caf50;
+//     border-radius: 5px;
+//     color: white;
+//     vertical-align: bottom;
+//     margin-top: 4.5px;
+//     cursor: pointer;
+//     flex-grow: 1;
+//     margin-right: 2.5px;
+//     margin-left: 2.5px;
+//     padding: 0px 10px;
+// }
+
+// .button-versionRelease:hover {
+//     background-color: #388e3c; /* Fondo gris más oscuro al pasar el ratón */
+//     border: 2px solid #388e3c;
+// }
+
+// .language-span {
+//     font-size: 30px; /* Tamaño de fuente */
+//     margin-right: 10px;
+//     margin-left: 10px;
+// }
+
+// .language-selector {
+//     font-family: Arial, sans-serif;
+//     font-size: 17px; /* Tamaño de fuente */
+//     border: 2px solid #ccc; /* Borde */
+//     border-radius: 5px; /* Borde redondeado */
+//     vertical-align: top;
+//     margin-top: 3.5px;
+//     width: auto;
+// }
+
+// .theme-span {
+//     font-size: 22px; /* Tamaño de fuente */
+//     margin-right: 10px;
+//     margin-left: 10px;
+//     margin-top: 3.5px;
+// }
+
+// /* The switch - the box around the slider */
+// .switch {
+//     position: relative;
+//     display: inline-block;
+//     width: 40px;
+//     height: 20px;
+// }
+
+// /* Hide default HTML checkbox */
+// .switch input {
+//     opacity: 0;
+//     width: 0;
+//     height: 0;
+// }
+
+// /* The slider */
+// .slider {
+//     position: absolute;
+//     cursor: pointer;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     background-color: #ccc;
+//     -webkit-transition: 0.4s;
+//     transition: 0.4s;
+// }
+
+// .slider:before {
+//     position: absolute;
+//     content: "";
+//     height: 30px;
+//     width: 30px;
+//     top: 2px;
+//     left: 2px;
+//     bottom: 4px;
+//     background-color: white;
+//     -webkit-transition: 0.4s;
+//     transition: 0.4s;
+// }
+
+// input:checked + .slider {
+//     background-color: #ccc;
+// }
+
+// input:focus + .slider {
+//     box-shadow: 0 0 1px #ccc;
+// }
+
+// input:checked + .slider:before {
+//     -webkit-transform: translateX(16px);
+//     -ms-transform: translateX(16px);
+//     transform: translateX(16px);
+// }
+
+// /* Rounded sliders */
+// .slider.round {
+//     border-radius: 30px;
+// }
+
+// .slider.round:before {
+//     border-radius: 50%;
+// }

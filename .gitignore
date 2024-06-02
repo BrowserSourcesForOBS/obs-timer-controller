@@ -3,23 +3,23 @@ package-lock.json
 node_modules/
 
 # Logs
-src/logs
-src/*.log
-src/npm-debug.log*
-src/yarn-debug.log*
-src/yarn-error.log*
-src/pnpm-debug.log*
-src/lerna-debug.log*
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-src/dist
-src/dist-ssr
-src/*.local
+dist
+dist-ssr
+*.local
 
 # Editor directories and files
-src/.idea
-src/.DS_Store
-src/*.suo
-src/*.ntvs*
-src/*.njsproj
-src/*.sln
-src/*.sw?
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
