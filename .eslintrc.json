@@ -1,0 +1,69 @@
+{
+  "root": true,
+  "env": { "browser": true, "es2020": true },
+  "ignorePatterns": ["dist", ".eslintrc.json", "vite.config.ts"],
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "xo",
+    "prettier",
+    "plugin:promise/recommended",
+    "plugin:import/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "plugins": [
+    "react-refresh",
+    "promise",
+    "import",
+    "jsx-a11y",
+    "@typescript-eslint"
+  ],
+  "overrides": [
+    {
+      "extends": [
+        "xo-typescript",
+        "prettier",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+      ],
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "camelcase": "off",
+        "prefer-const": "error",
+        "no-undef": "off",
+        "no-bitwise": "off",
+        "no-unused-vars": "off",
+        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/consistent-type-assertions": "off",
+        "@typescript-eslint/no-floating-promises": "off",
+        "@typescript-eslint/consistent-type-definitions": "off",
+        "@typescript-eslint/ban-types": "off",
+        "react-refresh/only-export-components": "off"
+      }
+    }
+  ],
+  "rules": {
+    "react-refresh/only-export-components": [
+      "warn",
+      { "allowConstantExport": true }
+    ],
+    "capitalized-comments": "off",
+    "promise/catch-or-return": "off",
+    "promise/always-return": "off",
+    "no-empty-static-block": "off",
+    "no-constant-binary-expression": "off",
+    "no-new-native-nonconstructor": "off",
+    "import/first": "error",
+    "import/no-duplicates": "error",
+    "import/no-unresolved": "off",
+    "no-duplicate-imports": "error",
+    "no-implicit-coercion": "off",
+    "guard-for-in": "off",
+    "complexity": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "no-await-in-loop": "off"
+  }
+}

@@ -1,4 +1,5 @@
 .env
+package-lock.json
 core/config.yaml
 core/db.yaml
 dist/
