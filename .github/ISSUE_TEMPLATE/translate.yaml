@@ -1,7 +1,7 @@
 name: Translates
 description: Improve code translation
 title: "[TRANSLATE] Your title"
-labels: "translate"
+labels: ["translate"]
 body:
   - type: input
     id: language

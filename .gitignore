@@ -1,6 +1,25 @@
 .env
 package-lock.json
-core/config.yaml
-core/db.yaml
-dist/
 node_modules/
+
+# Logs
+src/logs
+src/*.log
+src/npm-debug.log*
+src/yarn-debug.log*
+src/yarn-error.log*
+src/pnpm-debug.log*
+src/lerna-debug.log*
+
+src/dist
+src/dist-ssr
+src/*.local
+
+# Editor directories and files
+src/.idea
+src/.DS_Store
+src/*.suo
+src/*.ntvs*
+src/*.njsproj
+src/*.sln
+src/*.sw?

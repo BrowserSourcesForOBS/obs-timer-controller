@@ -1,7 +1,7 @@
 name: Feature Request
 description: Suggest an idea for this project
 title: "[SUGGESTION] Your feature request title"
-labels: "suggestion"
+labels: ["suggestion"]
 body:
   - type: textarea
     id: description
