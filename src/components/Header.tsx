@@ -34,7 +34,7 @@ const NavigationBar: React.FC = () => {
                 </Button>
                 {/* <Version /> */}
             </div>
-            <LanguageSelector />
+            {/* <LanguageSelector /> */}
             {/* <ThemeSelector /> */}
         </header>
     );

@@ -24,8 +24,8 @@
 [![Made with HTML](https://img.shields.io/badge/MADE%20WITH-HTML-orange?style=for-the-badge&logo=html5)](https://github.com/BrowserSourcesForOBS/obs-timer-controller)
 [![Made with CSS](https://img.shields.io/badge/MADE%20WITH-CSS-blue?style=for-the-badge&logo=css3)](https://github.com/BrowserSourcesForOBS/obs-timer-controller)
 <br>
-[![NodeJS version](https://img.shields.io/badge/VERSION-18.18.0%20LTS-yellow?style=for-the-badge&logo=javascript)](https://nodejs.org/en/download)
-[![npm version](https://img.shields.io/badge/VERSION-10.2.0-red?style=for-the-badge&logo=npm)](https://www.npmjs.com/)
+[![NodeJS version](https://img.shields.io/badge/VERSION-20.14.0%20LTS-yellow?style=for-the-badge&logo=javascript)](https://nodejs.org/en/download)
+[![npm version](https://img.shields.io/badge/VERSION-10.8.1-red?style=for-the-badge&logo=npm)](https://www.npmjs.com/)
 
 </div>
 
