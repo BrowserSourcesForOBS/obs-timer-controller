@@ -23,7 +23,8 @@ body:
     id: translate
     attributes:
       label: Translate YAML
-      description: "You can send the YAML file already translated or write it in this section.\n\n:warning: [WARNING] If you want to directly write the translation in this section, we recommend that you use the code block using YAML. You can use the \"**Preview**\" tab to see if the code has been written correctly.\n\nYou can use as a template: [en.yaml](https://github.com/BrowserSourcesForOBS/obs-timer-controller/blob/main/core/translates/en.yaml)"
-      placeholder: "```yaml # To create a YAML code block, this must be the first row\nkey:\n\tkey: \"The translation of the element would go here\"\n``` # To close the command block, we must add this at the end"
+      description: "You can send the YAML file already translated or write it in this section.\n\n:warning: [WARNING] If you want to directly write the translation in this section, we recommend that you use the code block using YAML. You can use the \"**Preview**\" tab to see if the code has been written correctly.\n\nYou can use as a template: [en.yaml](https://github.com/BrowserSourcesForOBS/obs-timer-controller/blob/main/locales/en.json)"
+      placeholder: "{\n\tkey: {\n\t\tvalue: \"The translation of the element would go here\"\n\t}\n}"
+      render: json
     validations:
       required: true

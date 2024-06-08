@@ -1,31 +1,15 @@
 import fs from "fs";
+import config from "@/data/config";
 import { compareVersions } from "@/utils/util";
 import axios from "axios";
+import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
-const Version: React.FC = () => {
-    const [enableNewVersion, setEnableNewVersion] = useState<boolean>(false);
-
-    async function getVersion() {
-        try {
-            // Determines the folder name based on the operating system
-            //const appFolder = process.platform === "darwin" ? "Resources" : "resources";
-
-            // Build the path to the package.json file
-            //const data = await fs.promises.readFile(process.argv[0] === "test" ? "./package.json" : `./${appFolder}/app/package.json`, "utf8");
-            const data = await fs.promises.readFile("./package.json", "utf8");
-
-            // Parse the content of the JSON file
-            const packageJson = JSON.parse(data);
-            const packageVersion = `v${packageJson.version}`;
-
-            // Extract the project version
-            console.log(`Project version: ${packageVersion}`);
-            return packageVersion;
-        } catch (jsonError) {
-            throw new Error(`Error parsing package.json: ${jsonError}`);
-        }
-    }
+const NewVersion: React.FC = () => {
+    const { t } = useTranslation();
+    const translate = (key: string) => t(`components.new-version.${key}`);
+    const [enableNewVersion, setEnableNewVersion] = useState<string | null>(null);
 
     async function getVersionRelease() {
         // Set the GitHub repository URL (make sure to replace 'owner' and 'repo' with your information)
@@ -45,21 +29,34 @@ const Version: React.FC = () => {
 
     useEffect(() => {
         async function fetchVersions() {
-            const localVersion = await getVersion();
+            const localVersion = config.AppVersion;
             const releaseVersion = await getVersionRelease();
 
             if (compareVersions(localVersion, releaseVersion) === 1) {
-                setEnableNewVersion(true);
+                setEnableNewVersion(releaseVersion);
             }
+
+            setEnableNewVersion(releaseVersion);
         }
 
         fetchVersions();
     }, []);
 
     if (enableNewVersion) {
-        return <span className="navigation-bar-version navigation-bar-version-release" id="navigation-bar-version"></span>;
+        return (
+            <Button
+                link
+                onClick={() => window.open("https://github.com/BrowserSourcesForOBS/obs-timer-controller/releases/latest", "_blank")}
+                rel="noreferrer"
+                id="button-new-version"
+                className="new-version-button"
+                title={translate("button-title")}
+            >
+                {translate("button")} {enableNewVersion}
+            </Button>
+        );
     }
     return null;
 };
 
-export default Version;
+export default NewVersion;

@@ -1,0 +1,11 @@
+{
+  "components": {
+    "header": {
+      "close-title": "Cerrar"
+    },
+    "new-version": {
+      "button": "Nueva versión disponible:",
+      "button-title": "Descargar la versión más reciente"
+    }
+  }
+}

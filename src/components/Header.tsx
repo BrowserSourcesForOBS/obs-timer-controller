@@ -1,14 +1,19 @@
 import Icon from "@/components/Icon";
 import LanguageSelector from "@/components/LanguageSelector";
 // import ThemeSelector from "@/components/ThemeSelector";
-// import Version from "@/components/NewVersion";
+import NewVersion from "@/components/NewVersion";
+import config from "@/data/config";
 import { Button } from "primereact/button";
+import { useTranslation } from "react-i18next";
 
 const NavigationBar: React.FC = () => {
+    const { t } = useTranslation();
+    const translate = (key: string) => t(`components.header.${key}`);
+
     return (
         <header className="navigation-bar">
             <div className="navigation-bar-button-left" id="button-left">
-                <Button className="navigation-bar-button-close" onClick={() => window.stop()} title="Close" id="button-close">
+                <Button className="navigation-bar-button-close" onClick={() => window.stop()} title={translate("close-title")} id="button-close">
                     <Icon type="default" icon="FaX" classNamePicture="navigation-bar-button-close-icon" classNameImage="navigation-bar-button-close-icon__image" />
                 </Button>
 
@@ -26,13 +31,14 @@ const NavigationBar: React.FC = () => {
                     link
                     onClick={() => window.open("https://github.com/BrowserSourcesForOBS/obs-timer-controller/wiki", "_blank")}
                     rel="noreferrer"
-                    id="button-github"
+                    id="button-wiki"
                     className="navigation-bar-button-link"
-                    title="GitHub"
+                    title="Wiki"
                 >
                     <Icon type="default" icon="FaBookOpen" classNamePicture="navigation-bar-button-link-icon" classNameImage="navigation-bar-button-link-icon__image" />
                 </Button>
-                {/* <Version /> */}
+                <Button className="navigation-bar-button-version">v{config.AppVersion}</Button>
+                <NewVersion />
             </div>
             {/* <LanguageSelector /> */}
             {/* <ThemeSelector /> */}

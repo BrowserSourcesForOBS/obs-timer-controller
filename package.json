@@ -10,8 +10,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "node": "node . test",
-    "pkg-win": "electron-packager . OBS-Timer-Controller --platform=win32 --arch=x64 --app-version=1.0.8 --out=dist --overwrite --icon=icon.ico --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
+    "pkg-win": "electron-packager . OBS-Timer-Controller --platform=win32 --arch=x64 --app-version=2.0.0 --out=dist --overwrite --icon=icon.ico --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
     "pkg-linux": "electron-packager . OBS-Timer-Controller --platform=linux --arch=x64 --app-version=1.0.8 --out=dist --overwrite --icon=icon.ico --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
     "pkg-mac": "electron-packager . OBS-Timer-Controller --platform=darwin --arch=x64 --app-version=1.0.8 --out=dist --overwrite --icon=icon.icns --author=\"XtoManuel\" --description=\"Handling browser sources for OBS related to timers and countdowns.\"",
     "pkg-all": "npm run pkg-win && npm run pkg-linux",
@@ -21,17 +20,23 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "start": "node --loader ts-node/esm server.ts"
+    "start": "node --loader ts-node/esm server.ts",
+    "node": "node . test"
   },
   "author": "XtoManuel",
   "license": "ISC",
   "devDependencies": {
     "@biomejs/biome": "1.5.2",
+    "@types/i18next": "^13.0.0",
+    "@types/i18next-browser-languagedetector": "^3.0.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/react-i18next": "^8.1.0",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
+    "electron": "^30.0.9",
+    "electron-packager": "^17.1.2",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
@@ -41,9 +46,13 @@
   },
   "dependencies": {
     "axios": "^1.7.2",
+    "i18next": "^23.11.5",
+    "i18next-browser-languagedetector": "^8.0.0",
+    "i18next-http-backend": "^2.5.2",
     "primereact": "^10.6.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^14.1.2",
     "react-icons": "^5.2.1",
     "react-router-dom": "^6.23.1",
     "sass": "^1.77.4"

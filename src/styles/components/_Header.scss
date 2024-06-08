@@ -71,22 +71,25 @@
                 border: 2px solid #444;
             }
         }
+
+        &-version {
+            height: 30px;
+            background-color: #007bff;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            padding-left: 10px;
+            padding-right: 10px;
+            cursor: auto;
+        }
     }
 }
-
-// .span-version {
-//     font-size: 18px;
-//     background-color: #007bff;
-//     border: 2px solid #007bff;
-//     border-radius: 5px;
-//     color: white;
-//     position: relative;
-//     top: -1.5px;
-//     flex-grow: 1;
-//     margin-right: 2.5px;
-//     margin-left: 2.5px;
-//     padding: 0px 10px;
-// }
 
 // .button-versionRelease {
 //     font-size: 16.5px;
