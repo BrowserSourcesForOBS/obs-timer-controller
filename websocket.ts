@@ -1,14 +1,50 @@
-import WebSocket, { WebSocketServer } from "ws";
+// websocket.ts
 
-export function startWebSocketServer(server) {
-    const wsServer = new WebSocketServer({ server });
+import { Server as HttpServer } from "http";
+import { Server as SocketIOServer } from "socket.io";
+import { ViteDevServer } from "vite";
 
-    wsServer.on("connection", (ws) => {
-        ws.on("message", (message) => {
-            if (message.toString() === "close-server") {
-                console.log("Closing server as requested by the client");
-                process.exit(0);
-            }
+export async function startWebSocketServer(viteServer: ViteDevServer, packageJson: { version?: string }) {
+    const httpServer = viteServer.httpServer as HttpServer | null;
+    if (!httpServer) {
+        console.error("HTTP server not available on ViteDevServer instance");
+        return;
+    }
+
+    const io = new SocketIOServer(httpServer, {
+        cors: {
+            origin: "*",
+        },
+    });
+
+    // Ruta para obtener el puerto del WebSocket
+    httpServer.on("request", (request, response) => {
+        if (request.url === "/request/websocket-port") {
+            response.writeHead(200, { "Content-Type": "text/plain" });
+            response.end(viteServer.config.server.port?.toString());
+        }
+        if (request.url === "/request/app-version") {
+            response.writeHead(200, { "Content-Type": "text/plain" });
+            response.end(packageJson?.version);
+        }
+    });
+
+    io.on("connection", (socket) => {
+        //     console.log("A client connected");
+
+        socket.on("message", (message) => {
+            console.log(`Received message: ${message.server}`);
+            if (message.origin !== "obs-timer-controller") return;
+            if (message.server === true) return;
+
+            message.server = true;
+            io.emit("message", message);
+        });
+
+        socket.on("disconnect", () => {
+            console.log("Client disconnected");
         });
     });
+
+    console.log("WebSocket server started");
 }

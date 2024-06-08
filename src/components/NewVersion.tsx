@@ -1,5 +1,3 @@
-import fs from "fs";
-import config from "@/data/config";
 import { compareVersions } from "@/utils/util";
 import axios from "axios";
 import { Button } from "primereact/button";
@@ -10,6 +8,7 @@ const NewVersion: React.FC = () => {
     const { t } = useTranslation();
     const translate = (key: string) => t(`components.new-version.${key}`);
     const [enableNewVersion, setEnableNewVersion] = useState<string | null>(null);
+    const [appVersion, setAppVersion] = useState<string | null>(null);
 
     async function getVersionRelease() {
         // Set the GitHub repository URL (make sure to replace 'owner' and 'repo' with your information)
@@ -29,10 +28,20 @@ const NewVersion: React.FC = () => {
 
     useEffect(() => {
         async function fetchVersions() {
-            const localVersion = config.AppVersion;
+            try {
+                const response = await fetch("/request/app-version");
+                if (response.ok) {
+                    const version = await response.text();
+                    setAppVersion(version);
+                } else {
+                    console.error("Failed to fetch app version:", response.status);
+                }
+            } catch (error) {
+                console.error("Error fetching app version:", error);
+            }
             const releaseVersion = await getVersionRelease();
 
-            if (compareVersions(localVersion, releaseVersion) === 1) {
+            if (appVersion && compareVersions(appVersion, releaseVersion) === 1) {
                 setEnableNewVersion(releaseVersion);
             }
 

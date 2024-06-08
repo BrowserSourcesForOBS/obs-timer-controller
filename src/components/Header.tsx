@@ -1,21 +1,52 @@
+// Header.jsx
+
 import Icon from "@/components/Icon";
-// import LanguageSelector from "@/components/LanguageSelector";
-// import ThemeSelector from "@/components/ThemeSelector";
 import NewVersion from "@/components/NewVersion";
-import config from "@/data/config";
 import { Button } from "primereact/button";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { io } from "socket.io-client";
+
+const origin = "obs-timer-controller";
+const socket = io();
 
 const Header: React.FC = () => {
     const { t } = useTranslation();
     const translate = (key: string) => t(`components.header.${key}`);
+    const [appVersion, setAppVersion] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchAppVersion = async () => {
+            try {
+                const response = await fetch("/request/app-version");
+                if (response.ok) {
+                    const version = await response.text();
+                    setAppVersion(version);
+                } else {
+                    console.error("Failed to fetch app version:", response.status);
+                }
+            } catch (error) {
+                console.error("Error fetching app version:", error);
+            }
+        };
+
+        fetchAppVersion();
+    }, []);
+
+    useEffect(() => {
+        socket.on("message", (message) => {
+            if (message.origin !== origin) return;
+            if (message.server === false) return;
+        });
+
+        return () => {
+            // Desuscribe la escucha del evento "message" al desmontar el componente
+            socket.off("message");
+        };
+    }, []);
 
     const handleClose = () => {
-        const ws = new WebSocket("ws://localhost:8080");
-        ws.onopen = () => {
-            ws.send("close-server");
-        };
+        socket.send({ origin, server: false, author: "home-page", action: "button-close" }); // Envía un mensaje al servidor para cerrar la conexión
     };
 
     return (
@@ -45,7 +76,7 @@ const Header: React.FC = () => {
                 >
                     <Icon type="default" icon="FaBookOpen" classNamePicture="navigation-bar-button-link-icon" classNameImage="navigation-bar-button-link-icon__image" />
                 </Button>
-                <Button className="navigation-bar-button-version">v{config.AppVersion}</Button>
+                {/* {appVersion && <Button className="navigation-bar-button-version">v{appVersion}</Button>} */}
                 <NewVersion />
             </div>
             {/* <LanguageSelector /> */}

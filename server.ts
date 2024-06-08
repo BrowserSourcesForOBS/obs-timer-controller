@@ -2,10 +2,11 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { fileURLToPath } from "url";
+import open, { apps } from "open";
 import { performance } from "perf_hooks";
-import { createServer } from "vite";
+import { ViteDevServer, createServer } from "vite";
 import { ccolor } from "./src/utils/ccolor.ts";
-import { getConfig, updateConfig } from "./src/utils/database.ts";
+import { getConfig } from "./src/utils/database.ts";
 import { startWebSocketServer } from "./websocket.ts"; // Importa la función startWebSocketServer
 
 // Obtén los argumentos de la línea de comandos desde el URL
@@ -23,7 +24,8 @@ async function getPackajeData() {
         PackageJsonPath = path.resolve(currentWorkingDir, "package.json");
     }
 
-    console.log(`PackageJsonPath: ${PackageJsonPath}`);
+    // console.log("args:", args);
+    // console.log(`PackageJsonPath: ${PackageJsonPath}`);
 
     try {
         const PackageJsonContent = fs.readFileSync(PackageJsonPath, "utf8");
@@ -59,7 +61,7 @@ async function startServer() {
     const configPath = path.resolve(__dirname, "src/databases/config.json");
     const AppConfig = getConfig(configPath);
 
-    const server = await createServer({
+    const viteServer: ViteDevServer = await createServer({
         configFile: path.resolve(__dirname, "vite.config.ts"),
         server: {
             port: (AppConfig?.port as unknown as number) || defaultPort,
@@ -67,33 +69,35 @@ async function startServer() {
         },
     });
 
-    // Inicia el servidor WebSocket utilizando el mismo servidor HTTP
-    startWebSocketServer(server);
+    viteServer.listen().then(async ({ config }) => {
+        getPackajeData().then((packageJson) => {
+            // Inicia el servidor WebSocket utilizando el servidor HTTP subyacente de Vite
+            startWebSocketServer(viteServer, packageJson);
 
-    server.listen().then(async ({ config }) => {
-        const endTime = performance.now();
-        const startupTime = (endTime - startTime).toFixed(2);
-        const startupTimeFormatted = ccolor.bold(`${startupTime} ms`);
+            const endTime = performance.now();
+            const startupTime = (endTime - startTime).toFixed(2);
+            const startupTimeFormatted = ccolor.bold(`${startupTime} ms`);
 
-        const packageJson = await getPackajeData();
+            const viteVersion = `v${packageJson?.devDependencies?.vite}`;
+            const PORT = config.server?.port || defaultPort;
+            const addressLocalHost = `http://localhost:${ccolor.bold(PORT)}${ccolor.cyan("/")}`;
+            const addressLocal = `http://127.0.0.1:${ccolor.bold(PORT)}${ccolor.cyan("/")}`;
+            const IPNetwork = getLocalIPAddress();
+            const addressNetwork = IPNetwork ? `http://${IPNetwork}:${ccolor.bold(PORT)}${ccolor.cyan("/")}` : null;
 
-        const viteVersion = `v${packageJson?.devDependencies?.vite}`;
-        const PORT = config.server?.port || defaultPort;
-        const addressLocalHost = `http://localhost:${ccolor.bold(PORT)}${ccolor.cyan("/")}`;
-        const addressLocal = `http://127.0.0.1:${ccolor.bold(PORT)}${ccolor.cyan("/")}`;
-        const IPNetwork = getLocalIPAddress();
-        const addressNetwork = IPNetwork ? `http://${IPNetwork}:${ccolor.bold(PORT)}${ccolor.cyan("/")}` : null;
+            // BLOQUEO POR PARTE DE LOS ANTIVIRUS DE ESTA OPCIÓN
+            // open(`http://localhost:${PORT}`, { app: { name: "google chrome" } }).catch((err) => {
+            //     console.error("Failed to open browser:", err);
+            // });
 
-        AppConfig.AppVersion = packageJson?.version;
-        updateConfig(AppConfig, configPath);
-
-        console.clear();
-        console.log(`  ${ccolor.green(ccolor.bold("VITE"))} ${ccolor.green(viteVersion)} ready in ${startupTimeFormatted}\n`);
-        console.log(`  ${ccolor.green("➜")}  ${ccolor.bold("Port")}:\t${ccolor.cyan(ccolor.bold(PORT))}`);
-        console.log(`  ${ccolor.green("➜")}  ${ccolor.bold("LocalHost")}:\t${ccolor.cyan(addressLocalHost)}`);
-        console.log(`  ${ccolor.green("➜")}  ${ccolor.bold("Local")}:\t${ccolor.cyan(addressLocal)}`);
-        if (addressNetwork) console.log(`  ${ccolor.green("➜")}  ${ccolor.bold("Network")}:\t${ccolor.cyan(addressNetwork)}`);
-        console.log("\n");
+            // console.clear();
+            console.log(`  ${ccolor.green(ccolor.bold("VITE"))} ${ccolor.green(viteVersion)} ready in ${startupTimeFormatted}\n`);
+            console.log(`  ${ccolor.green("➜")}  ${ccolor.bold("Port")}:\t${ccolor.cyan(ccolor.bold(PORT))}`);
+            console.log(`  ${ccolor.green("➜")}  ${ccolor.bold("LocalHost")}:\t${ccolor.cyan(addressLocalHost)}`);
+            console.log(`  ${ccolor.green("➜")}  ${ccolor.bold("Local")}:\t${ccolor.cyan(addressLocal)}`);
+            if (addressNetwork) console.log(`  ${ccolor.green("➜")}  ${ccolor.bold("Network")}:\t${ccolor.cyan(addressNetwork)}`);
+            console.log("\n");
+        });
     });
 }
 
