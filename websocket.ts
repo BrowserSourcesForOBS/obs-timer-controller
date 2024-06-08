@@ -33,7 +33,6 @@ export async function startWebSocketServer(viteServer: ViteDevServer, packageJso
         //     console.log("A client connected");
 
         socket.on("message", (message) => {
-            console.log(`Received message: ${message.server}`);
             if (message.origin !== "obs-timer-controller") return;
             if (message.server === true) return;
 
@@ -42,9 +41,9 @@ export async function startWebSocketServer(viteServer: ViteDevServer, packageJso
         });
 
         socket.on("disconnect", () => {
-            console.log("Client disconnected");
+            // console.log("Client disconnected");
         });
     });
 
-    console.log("WebSocket server started");
+    // console.log("WebSocket server started");
 }

@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { io } from "socket.io-client";
 
-const origin = "obs-timer-controller";
 const socket = io();
 
 const HomePage: React.FC = () => {
@@ -11,11 +10,16 @@ const HomePage: React.FC = () => {
     const changeLanguage = (language: string) => {
         i18n.changeLanguage(language);
     };
+    const dataWs = {
+        origin: "obs-timer-controller",
+        server: false,
+        author: "home-page",
+    } as Record<string, string | number | boolean>;
 
     // changeLanguage("es");
     useEffect(() => {
         socket.on("message", (message) => {
-            if (message.origin !== origin) return;
+            if (message.origin !== dataWs.origin) return;
             if (message.server === false) return;
         });
 

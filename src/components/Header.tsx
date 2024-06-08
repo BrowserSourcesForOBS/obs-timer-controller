@@ -7,13 +7,17 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { io } from "socket.io-client";
 
-const origin = "obs-timer-controller";
 const socket = io();
 
 const Header: React.FC = () => {
     const { t } = useTranslation();
     const translate = (key: string) => t(`components.header.${key}`);
     const [appVersion, setAppVersion] = useState<string | null>(null);
+    const dataWs = {
+        origin: "obs-timer-controller",
+        server: false,
+        author: "home-page",
+    } as Record<string, string | number | boolean>;
 
     useEffect(() => {
         const fetchAppVersion = async () => {
@@ -35,7 +39,7 @@ const Header: React.FC = () => {
 
     useEffect(() => {
         socket.on("message", (message) => {
-            if (message.origin !== origin) return;
+            if (message.origin !== dataWs.origin) return;
             if (message.server === false) return;
         });
 
@@ -46,7 +50,8 @@ const Header: React.FC = () => {
     }, []);
 
     const handleClose = () => {
-        socket.send({ origin, server: false, author: "home-page", action: "button-close" }); // Envía un mensaje al servidor para cerrar la conexión
+        dataWs.action = "button-close";
+        socket.send(dataWs); // Envía un mensaje al servidor para cerrar la conexión
     };
 
     return (
@@ -76,7 +81,7 @@ const Header: React.FC = () => {
                 >
                     <Icon type="default" icon="FaBookOpen" classNamePicture="navigation-bar-button-link-icon" classNameImage="navigation-bar-button-link-icon__image" />
                 </Button>
-                {/* {appVersion && <Button className="navigation-bar-button-version">v{appVersion}</Button>} */}
+                {appVersion && <Button className="navigation-bar-button-version">v{appVersion}</Button>}
                 <NewVersion />
             </div>
             {/* <LanguageSelector /> */}
