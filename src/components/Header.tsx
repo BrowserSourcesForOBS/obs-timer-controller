@@ -1,19 +1,27 @@
 import Icon from "@/components/Icon";
-import LanguageSelector from "@/components/LanguageSelector";
+// import LanguageSelector from "@/components/LanguageSelector";
 // import ThemeSelector from "@/components/ThemeSelector";
 import NewVersion from "@/components/NewVersion";
 import config from "@/data/config";
 import { Button } from "primereact/button";
+import React from "react";
 import { useTranslation } from "react-i18next";
 
-const NavigationBar: React.FC = () => {
+const Header: React.FC = () => {
     const { t } = useTranslation();
     const translate = (key: string) => t(`components.header.${key}`);
+
+    const handleClose = () => {
+        const ws = new WebSocket("ws://localhost:8080");
+        ws.onopen = () => {
+            ws.send("close-server");
+        };
+    };
 
     return (
         <header className="navigation-bar">
             <div className="navigation-bar-button-left" id="button-left">
-                <Button className="navigation-bar-button-close" onClick={() => window.stop()} title={translate("close-title")} id="button-close">
+                <Button className="navigation-bar-button-close" onClick={handleClose} title={translate("close-title")} id="button-close">
                     <Icon type="default" icon="FaX" classNamePicture="navigation-bar-button-close-icon" classNameImage="navigation-bar-button-close-icon__image" />
                 </Button>
 
@@ -46,4 +54,4 @@ const NavigationBar: React.FC = () => {
     );
 };
 
-export default NavigationBar;
+export default Header;

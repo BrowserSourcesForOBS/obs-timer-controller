@@ -4,9 +4,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { performance } from "perf_hooks";
 import { createServer } from "vite";
-// Revisar el problema de la importación al crear el paquete
 import { ccolor } from "./src/utils/ccolor.ts";
 import { getConfig, updateConfig } from "./src/utils/database.ts";
+import { startWebSocketServer } from "./websocket.ts"; // Importa la función startWebSocketServer
 
 // Obtén los argumentos de la línea de comandos desde el URL
 const urlParams = new URLSearchParams(import.meta.url.split("?")[1]);
@@ -66,6 +66,9 @@ async function startServer() {
             host: "0.0.0.0",
         },
     });
+
+    // Inicia el servidor WebSocket utilizando el mismo servidor HTTP
+    startWebSocketServer(server);
 
     server.listen().then(async ({ config }) => {
         const endTime = performance.now();
