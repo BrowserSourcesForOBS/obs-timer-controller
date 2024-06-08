@@ -24,8 +24,8 @@
     /* Aliases */
     "baseUrl": "./",
     "paths": {
-      "@/*": ["resources/app/src/*"],
-      "@/public/*": ["resources/app/public/*"]
+      "@/*": ["src/*"],
+      "@/public/*": ["public/*"]
     }
   },
   "include": ["src"],

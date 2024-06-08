@@ -3,24 +3,23 @@ import os from "os";
 import path from "path";
 import { fileURLToPath } from "url";
 import { performance } from "perf_hooks";
-// Revisar el problema de la importación al crear el paquete
-import { ccolor } from "src/utils/ccolor.ts";
-import { getConfig, updateConfig } from "src/utils/database.ts";
 import { createServer } from "vite";
+import { ccolor } from "./src/utils/ccolor.ts";
+import { getConfig, updateConfig } from "./src/utils/database.ts";
 
 const defaultPort = 5001;
 
-async function getPackajeData() {
+async function getViteVersion(): Promise<string> {
     const currentWorkingDir = process.cwd();
-    const PackageJsonPath = path.resolve(currentWorkingDir, "package.json");
+    const vitePackageJsonPath = path.resolve(currentWorkingDir, "package.json");
 
     try {
-        const PackageJsonContent = fs.readFileSync(PackageJsonPath, "utf8");
-        const PackageJson = JSON.parse(PackageJsonContent);
-        return PackageJson;
+        const vitePackageJsonContent = fs.readFileSync(vitePackageJsonPath, "utf8");
+        const vitePackageJson = JSON.parse(vitePackageJsonContent);
+        return vitePackageJson.devDependencies.vite;
     } catch (error) {
         console.error("Error reading package.json file:", error);
-        return {};
+        return "N/A";
     }
 }
 
@@ -51,7 +50,7 @@ async function startServer() {
     const server = await createServer({
         configFile: path.resolve(__dirname, "vite.config.ts"),
         server: {
-            port: (AppConfig?.port as number) || defaultPort,
+            port: AppConfig?.port || defaultPort,
             host: "0.0.0.0",
         },
     });
@@ -61,17 +60,15 @@ async function startServer() {
         const startupTime = (endTime - startTime).toFixed(2);
         const startupTimeFormatted = ccolor.bold(`${startupTime} ms`);
 
-        const packageJson = await getPackajeData();
-
-        const viteVersion = `v${packageJson?.devDependencies?.vite}`;
+        const viteVersion = `v${await getViteVersion()}`;
         const PORT = config.server?.port || defaultPort;
         const addressLocalHost = `http://localhost:${ccolor.bold(PORT)}${ccolor.cyan("/")}`;
         const addressLocal = `http://127.0.0.1:${ccolor.bold(PORT)}${ccolor.cyan("/")}`;
         const IPNetwork = getLocalIPAddress();
         const addressNetwork = IPNetwork ? `http://${IPNetwork}:${ccolor.bold(PORT)}${ccolor.cyan("/")}` : null;
 
-        AppConfig.AppVersion = packageJson?.version;
-        updateConfig(AppConfig, configPath);
+        // AppConfig.port = PORT;
+        // updateConfig(AppConfig, configPath);
 
         console.clear();
         console.log(`  ${ccolor.green(ccolor.bold("VITE"))} ${ccolor.green(viteVersion)} ready in ${startupTimeFormatted}\n`);

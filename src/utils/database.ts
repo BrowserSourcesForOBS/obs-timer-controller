@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-export function getConfig(configPath: string): Record<string, string | number> {
+export function getConfig(configPath: string): Record<string, string> {
     try {
         // Check if the config file exists
         if (!fs.existsSync(configPath)) {
@@ -17,7 +17,7 @@ export function getConfig(configPath: string): Record<string, string | number> {
     }
 }
 
-export function updateConfig(newConfig: Record<string, string | number>, configPath: string) {
+export function updateConfig(newConfig: Record<string, string>, configPath: string) {
     try {
         // Get the directory from the config path
         const configDir = path.dirname(configPath);
