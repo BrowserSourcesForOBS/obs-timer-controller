@@ -4,7 +4,13 @@ import { Server as HttpServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import { ViteDevServer } from "vite";
 
-export async function startWebSocketServer(viteServer: ViteDevServer, packageJson: { version?: string }) {
+interface DataWs {
+    packageJson?: {
+        version?: string;
+    };
+}
+
+export async function startWebSocketServer(viteServer: ViteDevServer, data: DataWs) {
     const httpServer = viteServer.httpServer as HttpServer | null;
     if (!httpServer) {
         console.error("HTTP server not available on ViteDevServer instance");
@@ -25,7 +31,7 @@ export async function startWebSocketServer(viteServer: ViteDevServer, packageJso
         }
         if (request.url === "/request/app-version") {
             response.writeHead(200, { "Content-Type": "text/plain" });
-            response.end(packageJson?.version);
+            response.end(data.packageJson?.version);
         }
     });
 

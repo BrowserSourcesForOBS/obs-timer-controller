@@ -72,7 +72,7 @@ async function startServer() {
     viteServer.listen().then(async ({ config }) => {
         getPackajeData().then((packageJson) => {
             // Inicia el servidor WebSocket utilizando el servidor HTTP subyacente de Vite
-            startWebSocketServer(viteServer, packageJson);
+            startWebSocketServer(viteServer, { packageJson });
 
             const endTime = performance.now();
             const startupTime = (endTime - startTime).toFixed(2);
