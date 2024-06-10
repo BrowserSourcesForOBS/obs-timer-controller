@@ -2,33 +2,23 @@
 
 import Icon from "@/components/Icon";
 import NewVersion from "@/components/NewVersion";
+import ws, { setAuthor } from "@/utils/websocket";
 import { Button } from "primereact/button";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { io } from "socket.io-client";
 
-const socket = io();
+setAuthor("header");
 
 const Header: React.FC = () => {
     const { t } = useTranslation();
     const translate = (key: string) => t(`components.header.${key}`);
-    const [appVersion, setAppVersion] = useState<string | null>(null);
-    const dataWs = {
-        origin: "obs-timer-controller",
-        server: false,
-        author: "home-page",
-    } as Record<string, string | number | boolean>;
+    const [appVersion, setAppVersion] = useState<string | undefined>(undefined);
 
     useEffect(() => {
         const fetchAppVersion = async () => {
             try {
-                const response = await fetch("/request/app-version");
-                if (response.ok) {
-                    const version = await response.text();
-                    setAppVersion(version);
-                } else {
-                    console.error("Failed to fetch app version:", response.status);
-                }
+                const version = await ws.request("app-version");
+                setAppVersion(version);
             } catch (error) {
                 console.error("Error fetching app version:", error);
             }
@@ -37,21 +27,8 @@ const Header: React.FC = () => {
         fetchAppVersion();
     }, []);
 
-    useEffect(() => {
-        socket.on("message", (message) => {
-            if (message.origin !== dataWs.origin) return;
-            if (message.server === false) return;
-        });
-
-        return () => {
-            // Desuscribe la escucha del evento "message" al desmontar el componente
-            socket.off("message");
-        };
-    }, []);
-
     const handleClose = () => {
-        dataWs.action = "button-close";
-        socket.send(dataWs); // Envía un mensaje al servidor para cerrar la conexión
+        ws.send("button-close"); // Envía un mensaje al servidor para cerrar la conexión
     };
 
     return (
