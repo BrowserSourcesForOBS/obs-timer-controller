@@ -16,4 +16,6 @@ i18n.use(Backend) // para cargar traducciones usando http
         },
     });
 
+// i18n.changeLanguage("es"); // para cambiar el idioma a español
+
 export default i18n;

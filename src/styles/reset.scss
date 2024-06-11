@@ -1,66 +1,55 @@
-* {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    scroll-behavior: smooth;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-html,
-body {
-    margin: 0;
-    padding: 0;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    cursor: default;
-    margin: 0;
-}
-
-ul,
-ol,
-li {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-a,
-button {
-    color: inherit;
-    cursor: pointer;
-}
-
-a {
-    text-decoration: none;
-}
-
-p {
-    margin: 0;
-}
-
-button {
-    border: 0;
-}
-
-input {
-    outline: none;
-}
-
-span {
-    cursor: default;
-}
-
 .fa {
     line-height: normal;
+}
+
+html {
+    font-size: 12px;
+}
+
+body {
+    font-family: var(--font-family);
+    font-weight: normal;
+    background: var(--surface-ground);
+    color: var(--text-color);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    padding: 0;
+}
+
+.card {
+    background: var(--surface-card);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.p-component {
+    height: 30px;
+}
+
+.p-inputtext {
+    display: flex;
+    align-items: center;
+}
+
+.p-button {
+    padding: 7.5px;
+}
+
+.p-button:enabled:focus {
+    box-shadow: none;
+}
+
+.p-button:not(:disabled):active {
+    background: auto;
+    color: auto;
+    border-color: auto;
+}
+
+.p-button-icon-only {
+    width: 30px !important;
+    & > span {
+        font-size: 18px;
+    }
 }

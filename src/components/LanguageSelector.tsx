@@ -1,31 +1,15 @@
-{
-    /* <div className="language-span">
-    <i className="fas fa-language"></i>
-    <select className="language-selector" id="language-selector"></select>
-</div>; */
-}
-
+import Languages from "@/data/langs";
 import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
 
 const LanguageSelector: React.FC = () => {
-    const [selectedLanguage, setSelectedLanguage] = useState({ name: "Español", code: "ES" });
-    const Languages = [
-        { name: "Español", code: "ES" },
-        { name: "English", code: "UK" },
-    ];
+    const [selectedLanguage, setSelectedLanguage] = useState({ name: "Español", code: "es" });
 
-    const selectedCountryTemplate = (option, props) => {
+    const selectedCountryTemplate = (option: ILang.Lang, props) => {
         if (option) {
             return (
                 <div className="flex align-items-center">
-                    <img
-                        alt={option.name}
-                        src="https://primefaces.org/cdn/primereact/images/flag/flag_placeholder.png"
-                        className={`mr-2 flag flag-${option.code.toLowerCase()}`}
-                        style={{ width: "18px" }}
-                    />
-                    <div>{option.name}</div>
+                    <div>{`:flag-${option.code}:\t${option.name}`}</div>
                 </div>
             );
         }
@@ -33,16 +17,10 @@ const LanguageSelector: React.FC = () => {
         return <span>{props.placeholder}</span>;
     };
 
-    const countryOptionTemplate = (option) => {
+    const countryOptionTemplate = (option: ILang.Lang) => {
         return (
             <div className="flex align-items-center">
-                <img
-                    alt={option.name}
-                    src="https://primefaces.org/cdn/primereact/images/flag/flag_placeholder.png"
-                    className={`mr-2 flag flag-${option.code.toLowerCase()}`}
-                    style={{ width: "18px" }}
-                />
-                <div>{option.name}</div>
+                <div>{`:flag-${option.code}:\t${option.name}`}</div>
             </div>
         );
     };

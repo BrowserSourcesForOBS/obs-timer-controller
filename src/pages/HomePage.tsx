@@ -4,9 +4,6 @@ import { useTranslation } from "react-i18next";
 
 const HomePage: React.FC = () => {
     const { i18n } = useTranslation();
-    const changeLanguage = (language: string) => {
-        i18n.changeLanguage(language);
-    };
 
     ws.onMessage((action, author) => {
         console.log(`onMessage action [${author}]:`, action);

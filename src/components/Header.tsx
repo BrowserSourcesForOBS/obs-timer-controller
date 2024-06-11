@@ -1,11 +1,10 @@
-// Header.jsx
-
 import Icon from "@/components/Icon";
 import NewVersion from "@/components/NewVersion";
 import ws, { setAuthor } from "@/utils/websocket";
 import { Button } from "primereact/button";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import LanguageSelector from "./LanguageSelector";
 
 setAuthor("header");
 
@@ -33,36 +32,32 @@ const Header: React.FC = () => {
 
     return (
         <header className="navigation-bar">
-            <div className="navigation-bar-button-left" id="button-left">
-                <Button className="navigation-bar-button-close" onClick={handleClose} title={translate("close-title")} id="button-close">
-                    <Icon type="default" icon="FaX" classNamePicture="navigation-bar-button-close-icon" classNameImage="navigation-bar-button-close-icon__image" />
-                </Button>
+            <div className="navigation-bar-container-left">
+                <Button icon="pi pi-times" severity="danger" className="navigation-bar-button" onClick={handleClose} title={translate("close-title")} />
 
                 <Button
-                    link
+                    icon="pi pi-github"
+                    severity="secondary"
+                    className="navigation-bar-button"
                     onClick={() => window.open("https://github.com/BrowserSourcesForOBS/obs-timer-controller", "_blank")}
-                    rel="noreferrer"
-                    id="button-github"
-                    className="navigation-bar-button-link"
                     title="GitHub"
-                >
-                    <Icon type="default" icon="FaGithub" classNamePicture="navigation-bar-button-link-icon" classNameImage="navigation-bar-button-link-icon__image" />
-                </Button>
+                />
+
                 <Button
-                    link
+                    icon="pi pi-book"
+                    severity="secondary"
+                    className="navigation-bar-button"
                     onClick={() => window.open("https://github.com/BrowserSourcesForOBS/obs-timer-controller/wiki", "_blank")}
-                    rel="noreferrer"
-                    id="button-wiki"
-                    className="navigation-bar-button-link"
                     title="Wiki"
-                >
-                    <Icon type="default" icon="FaBookOpen" classNamePicture="navigation-bar-button-link-icon" classNameImage="navigation-bar-button-link-icon__image" />
-                </Button>
-                {appVersion && <Button className="navigation-bar-button-version">v{appVersion}</Button>}
-                <NewVersion />
+                    plain={true}
+                />
+
+                {appVersion && <Button severity="info" label={`v${appVersion}`} disabled style={{ opacity: 100 }} />}
             </div>
-            {/* <LanguageSelector /> */}
-            {/* <ThemeSelector /> */}
+            <div className="navigation-bar-container-right">
+                <LanguageSelector />
+                {/* <ThemeSelector /> */}
+            </div>
         </header>
     );
 };
