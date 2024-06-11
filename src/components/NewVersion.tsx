@@ -53,16 +53,18 @@ const NewVersion: React.FC = () => {
 
     if (enableNewVersion) {
         return (
-            <Button
-                link
-                onClick={() => window.open("https://github.com/BrowserSourcesForOBS/obs-timer-controller/releases/latest", "_blank")}
-                rel="noreferrer"
-                id="button-new-version"
-                className="new-version-button"
-                title={translate("button-title")}
-            >
-                {translate("button")} {enableNewVersion}
-            </Button>
+            <div className="flex justify-content-center align-items-center">
+                <Button
+                    onClick={() => window.open("https://github.com/BrowserSourcesForOBS/obs-timer-controller/releases/latest", "_blank")}
+                    rel="noreferrer"
+                    id="button-new-version"
+                    className="new-version-button"
+                    title={translate("button-title")}
+                    severity="success"
+                >
+                    {translate("button")} {enableNewVersion}
+                </Button>
+            </div>
         );
     }
     return null;

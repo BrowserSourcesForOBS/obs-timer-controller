@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import ws from "@/utils/websocket";
 import { useTranslation } from "react-i18next";
+import uEmojiParser from "universal-emoji-parser";
 
 const HomePage: React.FC = () => {
     const { i18n } = useTranslation();
@@ -16,7 +17,7 @@ const HomePage: React.FC = () => {
     return (
         <div className="homepage">
             <Header />
-            <div className="homepage-container">"Home Page"</div>
+            <div className="homepage-container">Home Page</div>
         </div>
     );
 };

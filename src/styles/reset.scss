@@ -3,7 +3,7 @@
 }
 
 html {
-    font-size: 12px;
+    font-size: 18px;
 }
 
 body {
@@ -25,7 +25,7 @@ body {
 }
 
 .p-component {
-    height: 30px;
+    height: 35px;
 }
 
 .p-inputtext {
@@ -34,7 +34,7 @@ body {
 }
 
 .p-button {
-    padding: 7.5px;
+    padding: 5px;
 }
 
 .p-button:enabled:focus {
@@ -48,8 +48,36 @@ body {
 }
 
 .p-button-icon-only {
-    width: 30px !important;
+    width: 35px !important;
     & > span {
         font-size: 18px;
     }
+}
+
+.p-dropdown-header {
+    border: 1px solid #bbb; /* Bordes grises */
+    border-bottom-color: #ddd; /* Sin borde inferior */
+    padding: 10px; /* Ajustar el relleno según sea necesario */
+    box-sizing: border-box; /* Asegurarse de que el relleno y el borde estén incluidos en el tamaño total del elemento */
+}
+
+.p-dropdown-items-wrapper {
+    border: 1px solid #bbb; /* Bordes grises */
+    border-top: none; /* Sin borde superior */
+    max-height: 200px; /* Ajustar el máximo alto según sea necesario */
+    box-sizing: border-box; /* Asegurarse de que el relleno y el borde estén incluidos en el tamaño total del elemento */
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.p-dropdown:not(.p-disable).p-focus {
+    box-shadow: none;
+    border-color: auto;
+}
+
+img.emoji {
+    height: 1em;
+    width: 1em;
+    margin: 0 0.05em 0 0.1em;
+    vertical-align: -0.15em;
 }

@@ -6,6 +6,12 @@
     "new-version": {
       "button": "Nueva versión disponible:",
       "button-title": "Descargar la versión más reciente"
+    },
+    "language-selector": {
+      "language": "Idioma"
+    },
+    "theme-selector": {
+      "theme": "Tema"
     }
   }
 }

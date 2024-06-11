@@ -1,0 +1,17 @@
+.theme-selector {
+    &-container {
+        display: flex;
+        justify-content: center; /* Centra horizontalmente los elementos hijos */
+        align-items: center; /* Centra verticalmente los elementos hijos */
+        gap: 5px;
+
+        &-switch-slider {
+            &.p-highlight .p-inputswitch-slider {
+                background: #888;
+            }
+            &.p-highlight:hover .p-inputswitch-slider {
+                background: #666;
+            }
+        }
+    }
+}

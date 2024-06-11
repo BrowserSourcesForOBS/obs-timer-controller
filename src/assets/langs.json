@@ -1,4 +1,4 @@
 [
-  { "name": "Español", "code": "es" },
-  { "name": "English", "code": "gb" }
+  { "name": "Español", "code": "es", "flag": ":flag_spain:" },
+  { "name": "English", "code": "gb", "flag": ":flag_united_kingdom:" }
 ]

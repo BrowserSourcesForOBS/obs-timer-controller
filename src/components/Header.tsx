@@ -5,6 +5,7 @@ import { Button } from "primereact/button";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import LanguageSelector from "./LanguageSelector";
+import ThemeSelector from "./ThemeSelector";
 
 setAuthor("header");
 
@@ -33,30 +34,42 @@ const Header: React.FC = () => {
     return (
         <header className="navigation-bar">
             <div className="navigation-bar-container-left">
-                <Button icon="pi pi-times" severity="danger" className="navigation-bar-button" onClick={handleClose} title={translate("close-title")} />
+                <div className="flex justify-content-center align-items-center">
+                    <Button icon="pi pi-times" severity="danger" className="navigation-bar-button" onClick={handleClose} title={translate("close-title")} />
+                </div>
 
-                <Button
-                    icon="pi pi-github"
-                    severity="secondary"
-                    className="navigation-bar-button"
-                    onClick={() => window.open("https://github.com/BrowserSourcesForOBS/obs-timer-controller", "_blank")}
-                    title="GitHub"
-                />
+                <div className="flex justify-content-center align-items-center">
+                    <Button
+                        icon="pi pi-github"
+                        severity="secondary"
+                        className="navigation-bar-button"
+                        onClick={() => window.open("https://github.com/BrowserSourcesForOBS/obs-timer-controller", "_blank")}
+                        title="GitHub"
+                    />
+                </div>
 
-                <Button
-                    icon="pi pi-book"
-                    severity="secondary"
-                    className="navigation-bar-button"
-                    onClick={() => window.open("https://github.com/BrowserSourcesForOBS/obs-timer-controller/wiki", "_blank")}
-                    title="Wiki"
-                    plain={true}
-                />
+                <div className="flex justify-content-center align-items-center">
+                    <Button
+                        icon="pi pi-book"
+                        severity="secondary"
+                        className="navigation-bar-button"
+                        onClick={() => window.open("https://github.com/BrowserSourcesForOBS/obs-timer-controller/wiki", "_blank")}
+                        title="Wiki"
+                        plain={true}
+                    />
+                </div>
 
-                {appVersion && <Button severity="info" label={`v${appVersion}`} disabled style={{ opacity: 100 }} />}
+                {appVersion && (
+                    <div className="flex justify-content-center align-items-center">
+                        <Button severity="info" label={`v${appVersion}`} disabled style={{ opacity: 100 }} />{" "}
+                    </div>
+                )}
+
+                <NewVersion />
             </div>
             <div className="navigation-bar-container-right">
                 <LanguageSelector />
-                {/* <ThemeSelector /> */}
+                <ThemeSelector />
             </div>
         </header>
     );
