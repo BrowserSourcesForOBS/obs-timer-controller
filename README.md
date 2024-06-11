@@ -2,6 +2,8 @@
 
 > [!IMPORTANT]  
 > We are working to develop a version 2.0.0 of this project by improving and optimizing the code. Currently, we are aware that some functions are not working as they should.
+>
+> You can see the progress of the new version at: https://github.com/BrowserSourcesForOBS/obs-timer-controller/tree/dev
 
 <h2 align="center">This repository is used for creating dynamic browser sources related to timers, ideal for use in OBS (Open Broadcaster Software).</h2>
 
