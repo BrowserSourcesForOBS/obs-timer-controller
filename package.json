@@ -8,10 +8,10 @@
     "url": "https://github.com/BrowserSourcesForOBS/obs-timer-controller.git"
   },
   "dependencies": {
-    "axios": "^1.6.0",
+    "axios": "^1.7.4",
     "child_process": "^1.0.2",
     "dotenv": "^16.3.1",
-    "express": "^4.19.2",
+    "express": "^4.20.0",
     "fontkit": "^2.0.2",
     "fs-extra": "^11.1.1",
     "http": "0.0.1-security",
@@ -19,7 +19,7 @@
     "openurl": "^1.1.1",
     "socket.io": "^4.7.2",
     "util-tiempo": "^1.0.52",
-    "ws": "^8.17.1"
+    "ws": "^8.18.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
